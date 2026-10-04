@@ -157,6 +157,29 @@
     .pb-pass-icon { font-size: 3rem; }
     .pb-pass-msg  { font-size: 1.1rem; font-weight: 800; }
     .pb-pass-sub  { font-size: .82rem; color: rgba(255,255,255,.45); }
+
+    /* BATAILLE NAVALE */
+    :root { --bsc:min(28px,calc((100vw - 60px)/11)); --bscs:calc(var(--bsc)*.62); }
+    .bs-grid    { display:grid; grid-template-columns:20px repeat(10,var(--bsc));  grid-template-rows:20px repeat(10,var(--bsc));  gap:2px; align-self:center; }
+    .bs-grid-sm { display:grid; grid-template-columns:16px repeat(10,var(--bscs)); grid-template-rows:16px repeat(10,var(--bscs)); gap:1px; align-self:center; }
+    .bs-lbl  { display:flex;align-items:center;justify-content:center;font-size:.48rem;font-weight:700;color:rgba(255,255,255,.28); }
+    .bs-c    { width:var(--bsc);height:var(--bsc);border-radius:3px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:background .08s; }
+    .bs-cs   { width:var(--bscs);height:var(--bscs);border-radius:2px;background:rgba(255,255,255,.06); }
+    .bs-ship  { background:var(--sky)!important; }
+    .bs-ship-d{ background:rgba(85,122,134,.32)!important; }
+    .bs-sel   { background:var(--gold)!important;box-shadow:0 0 5px rgba(243,222,138,.5); }
+    .bs-preview{ background:rgba(85,122,134,.42)!important; }
+    .bs-hit   { background:var(--raspberry)!important;animation:bspop .22s ease; }
+    .bs-miss  { background:rgba(255,255,255,.22)!important; }
+    .bs-tgt:active{ background:rgba(255,255,255,.13)!important; }
+    @keyframes bspop{ from{transform:scale(1.35)} to{transform:scale(1)} }
+    .bs-ship-btn{ background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:.42rem .65rem;display:flex;flex-direction:column;gap:.28rem;cursor:pointer;flex-shrink:0; }
+    .bs-sel-btn{ border-color:var(--gold)!important;background:rgba(243,222,138,.09)!important; }
+    .bs-done{ opacity:.42; }
+    .bs-dots{ display:flex;gap:2px; }
+    .bs-dot { width:9px;height:9px;border-radius:2px;background:var(--sky); }
+    .bs-dot-g{ background:var(--gold); }
+    .bs-sname{ font-size:.56rem;font-weight:700;color:rgba(255,255,255,.48); }
   </style>
 </head>
 <body>
@@ -193,10 +216,11 @@
       <div class="card-name">Qui me connaît ?</div>
       <div class="card-badge badge-both"><span class="badge-dot"></span>Local & Distance</div>
     </div>
-    <div class="game-card soon">
+    <div class="game-card" onclick="openGame('bs')">
+      <div class="card-glow" style="background:var(--sky)"></div>
       <div class="card-icon">🚢</div>
       <div class="card-name">Bataille navale</div>
-      <div class="card-badge badge-soon">Bientôt</div>
+      <div class="card-badge badge-both"><span class="badge-dot"></span>Local & Distance</div>
     </div>
     <div class="game-card" onclick="openGame('pb')">
       <div class="card-glow" style="background:var(--sky)"></div>
@@ -519,6 +543,109 @@
     <div style="padding:.75rem 1.25rem calc(env(safe-area-inset-bottom,0px) + .75rem);display:flex;flex-direction:column;align-items:center;gap:.6rem">
       <button class="btn btn-primary btn-w" onclick="pbNewRound()">Nouvelle manche</button>
       <button class="btn btn-ghost btn-w" onclick="pbBackToHub()">Quitter</button>
+    </div>
+  </div>
+</div>
+
+<!-- BATAILLE NAVALE -->
+<div id="game-bs" class="game-wrap">
+  <div class="top-bar">
+    <button class="top-back" onclick="bsBackToHub()">← Retour</button>
+    <div class="top-title">Bataille Navale</div>
+    <div class="top-right"></div>
+  </div>
+
+  <!-- Mode -->
+  <div id="bs-mode" class="centered-body">
+    <div style="font-size:2.5rem">🚢</div>
+    <div class="mode-title">Bataille Navale</div>
+    <div class="mode-sub">Placez vos bateaux en secret. Coulez la flotte adverse.</div>
+    <div class="btn-group">
+      <button class="btn btn-ghost" onclick="bsStartLocal()">Jouer en local</button>
+      <button class="btn btn-primary" onclick="bsCreateRemote()">Créer une partie à distance</button>
+      <button class="btn btn-ghost" onclick="bsShowJoin()">Rejoindre une partie</button>
+    </div>
+  </div>
+
+  <!-- Attente remote -->
+  <div id="bs-wait" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;padding:1.5rem">
+    <div class="sec-lbl">Code de la partie</div>
+    <div class="code-box" id="bs-code-box">----</div>
+    <div class="wait-row"><div class="spinner"></div>En attente de l'autre joueur…</div>
+    <button class="btn btn-ghost btn-w" onclick="bsShareCode()">Partager le code ↗</button>
+    <button class="btn btn-ghost btn-w" onclick="bsCancelRemote()">Annuler</button>
+  </div>
+
+  <!-- Rejoindre remote -->
+  <div id="bs-join" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:1.5rem">
+    <input id="bs-input" class="code-input" maxlength="4" placeholder="CODE" autocomplete="off"
+      oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')"
+      onkeydown="if(event.key==='Enter')bsJoinRemote()">
+    <div id="bs-err" class="err-msg"></div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="bsJoinRemote()">Rejoindre</button>
+      <button class="btn btn-ghost" onclick="bsShowMode()">Retour</button>
+    </div>
+  </div>
+
+  <!-- Placement des bateaux -->
+  <div id="bs-place" style="display:none;flex:1;flex-direction:column">
+    <div style="padding:.55rem 1rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div class="sec-lbl" id="bs-place-who" style="text-align:left">Placez vos bateaux</div>
+      <div style="display:flex;gap:.4rem">
+        <button class="btn btn-ghost" style="padding:.35rem .6rem;font-size:.72rem" onclick="bsToggleDir()" id="bs-dir-btn">↔ H</button>
+        <button class="btn btn-ghost" style="padding:.35rem .6rem;font-size:.72rem" onclick="bsAutoPlace()">🎲</button>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;padding:.6rem;overflow:hidden">
+      <div id="bs-place-grid" class="bs-grid"></div>
+      <div style="overflow-x:auto;width:100%;max-width:420px;padding:.1rem .5rem">
+        <div id="bs-ship-bar" style="display:flex;gap:.4rem;width:max-content;padding:.2rem 0"></div>
+      </div>
+    </div>
+    <div style="padding:.6rem 1rem calc(env(safe-area-inset-bottom,0px) + .6rem);flex-shrink:0">
+      <button class="btn btn-primary btn-w" style="margin:0 auto" id="bs-place-confirm" onclick="bsConfirmPlace()" disabled>Confirmer ✓</button>
+    </div>
+  </div>
+
+  <!-- Attente placement adversaire (remote) -->
+  <div id="bs-wait-place" class="qmc-waiting" style="display:none">
+    <div class="spinner" style="width:24px;height:24px;border-width:3px"></div>
+    <div class="qmc-wait-msg">En attente que l'adversaire place ses bateaux…</div>
+  </div>
+
+  <!-- Passer le téléphone (local) -->
+  <div id="bs-pass" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:2rem;text-align:center">
+    <div style="font-size:2.8rem" id="bs-pass-icon">🤝</div>
+    <div style="font-size:1.05rem;font-weight:800" id="bs-pass-msg">Passez le téléphone</div>
+    <div style="font-size:.8rem;color:rgba(255,255,255,.42)" id="bs-pass-sub"></div>
+    <button class="btn btn-primary btn-w" id="bs-pass-btn">Continuer →</button>
+  </div>
+
+  <!-- Jeu -->
+  <div id="bs-game" style="display:none;flex:1;flex-direction:column;position:relative;overflow:hidden">
+    <div style="padding:.5rem 1rem;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div style="font-size:.72rem;font-weight:800;color:rgba(255,255,255,.5)" id="bs-status"></div>
+      <div style="display:flex;gap:.8rem">
+        <span style="font-size:.72rem;font-weight:800;color:var(--raspberry)" id="bs-my-fleet"></span>
+        <span style="font-size:.72rem;font-weight:800;color:var(--gold)" id="bs-op-fleet"></span>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:.4rem;padding:.6rem .5rem calc(env(safe-area-inset-bottom,0px) + .6rem)">
+      <div class="sec-lbl">Vos tirs</div>
+      <div id="bs-attack-grid" class="bs-grid"></div>
+      <div class="sec-lbl" style="margin-top:.2rem">Votre flotte</div>
+      <div id="bs-defense-grid" class="bs-grid-sm"></div>
+    </div>
+    <div class="win-overlay" id="bs-win">
+      <div class="win-card">
+        <div class="win-label">Fin de partie</div>
+        <div class="win-msg" id="bs-win-msg">—</div>
+      </div>
+      <div class="win-btns">
+        <button class="btn btn-primary" onclick="bsNewGame()">Nouvelle partie</button>
+        <button class="btn btn-ghost" onclick="bsBackToHub()">Quitter</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1222,6 +1349,270 @@ function pbStopTimer(){
 function pbRandLetter(){ return PB_LETTERS[Math.floor(Math.random()*PB_LETTERS.length)]; }
 function pbSaveSession(){try{localStorage.setItem('duo_pb_code',pbCode);localStorage.setItem('duo_pb_me',pbMe);}catch{}}
 function pbClearSession(){try{localStorage.removeItem('duo_pb_code');localStorage.removeItem('duo_pb_me');}catch{}}
+
+// ─── BATAILLE NAVALE ────────────────────────────────────────
+const BS_FLEET=[{id:0,name:'Porte-avions',size:5},{id:1,name:'Croiseur',size:4},{id:2,name:'Sous-marin',size:3},{id:3,name:'Torpilleur',size:3},{id:4,name:'Destroyer',size:2}];
+const BS_TOTAL=17;
+
+let bsLocal=false,bsCode='',bsMe=0,bsRef=null,bsListening=false,bsStarted=false;
+let bsSelShip=0,bsSelDir='H',bsPlaced=[];
+let bsPlacePhase=0;
+let bsLocalB=[null,null]; // Set<"r,c"> boards
+let bsLocalS=[[],[]];     // [{r,c,hit}] shots[0]=fired by p1 at p2, shots[1]=fired by p2 at p1
+let bsLocalTurn=1;
+
+function bsKey(r,c){return r+','+c;}
+function bsCells({r,c,dir,size}){const a=[];for(let i=0;i<size;i++)a.push(dir==='H'?[r,c+i]:[r+i,c]);return a;}
+function bsOccMap(placed){const m={};placed.forEach(s=>bsCells(s).forEach(([r,c])=>{m[bsKey(r,c)]=s.id;}));return m;}
+function bsCanPlace(id,r,c,dir,placed){
+  const cells=bsCells({r,c,dir,size:BS_FLEET[id].size});
+  if(cells.some(([rr,cc])=>rr<0||rr>9||cc<0||cc>9))return false;
+  const occ=bsOccMap(placed.filter(s=>s.id!==id));
+  return!cells.some(([rr,cc])=>occ[bsKey(rr,cc)]!==undefined);
+}
+function bsBoardFromPlaced(placed){return new Set(placed.flatMap(s=>bsCells(s).map(([r,c])=>bsKey(r,c))));}
+
+const BS_SECS=['bs-mode','bs-wait','bs-join','bs-place','bs-wait-place','bs-pass','bs-game'];
+function bsSec(id){BS_SECS.forEach(s=>{const el=document.getElementById(s);if(el)el.style.display=s===id?'flex':'none';});}
+function bsShowMode(){bsSec('bs-mode');}
+function bsShowJoin(){document.getElementById('bs-input').value='';document.getElementById('bs-err').textContent='';bsSec('bs-join');}
+function bsBackToHub(){if(bsRef){bsRef.off();bsRef=null;}bsListening=false;bsStarted=false;bsClearSession();closeGame('bs');bsShowMode();}
+
+// ── PLACEMENT ──
+function bsStartLocal(){bsLocal=true;bsPlacePhase=0;bsInitPlace('Joueur 1');}
+
+function bsInitPlace(who){
+  bsPlaced=[];bsSelShip=0;bsSelDir='H';
+  document.getElementById('bs-place-who').textContent=who+', placez vos bateaux';
+  document.getElementById('bs-dir-btn').textContent='⇔ H';
+  bsRenderPlaceGrid();bsRenderShipBar();
+  bsSec('bs-place');
+}
+
+function bsToggleDir(){
+  bsSelDir=bsSelDir==='H'?'V':'H';
+  document.getElementById('bs-dir-btn').textContent='⇔ '+bsSelDir;
+  bsRenderPlaceGrid();
+}
+
+function bsAutoPlace(){
+  bsPlaced=[];
+  BS_FLEET.forEach(f=>{
+    for(let t=0;t<500;t++){
+      const dir=Math.random()<.5?'H':'V',r=Math.floor(Math.random()*10),c=Math.floor(Math.random()*10);
+      if(bsCanPlace(f.id,r,c,dir,bsPlaced)){bsPlaced.push({id:f.id,size:f.size,r,c,dir});break;}
+    }
+  });
+  bsSelShip=-1;bsRenderPlaceGrid();bsRenderShipBar();
+  document.getElementById('bs-place-confirm').disabled=bsPlaced.length<BS_FLEET.length;
+}
+
+function bsPlaceShip(r,c){
+  if(bsSelShip<0)return;
+  if(!bsCanPlace(bsSelShip,r,c,bsSelDir,bsPlaced))return;
+  bsPlaced=bsPlaced.filter(s=>s.id!==bsSelShip);
+  bsPlaced.push({id:bsSelShip,size:BS_FLEET[bsSelShip].size,r,c,dir:bsSelDir});
+  const next=BS_FLEET.findIndex((f,i)=>i>bsSelShip&&!bsPlaced.find(s=>s.id===i));
+  bsSelShip=next>=0?next:(bsPlaced.length===BS_FLEET.length?-1:bsSelShip);
+  bsRenderPlaceGrid();bsRenderShipBar();
+  document.getElementById('bs-place-confirm').disabled=bsPlaced.length<BS_FLEET.length;
+}
+
+function bsMakeGridEl(el,cellCls,lblCls,cbFn){
+  el.innerHTML='';
+  const corner=document.createElement('div');corner.className=lblCls;el.appendChild(corner);
+  'ABCDEFGHIJ'.split('').forEach(l=>{const d=document.createElement('div');d.className=lblCls;d.textContent=l;el.appendChild(d);});
+  for(let r=0;r<10;r++){
+    const rl=document.createElement('div');rl.className=lblCls;rl.textContent=r+1;el.appendChild(rl);
+    for(let c=0;c<10;c++){const cell=document.createElement('div');cell.className=cellCls;cbFn(r,c,cell);el.appendChild(cell);}
+  }
+}
+
+function bsRenderPlaceGrid(){
+  const occ=bsOccMap(bsPlaced);
+  bsMakeGridEl(document.getElementById('bs-place-grid'),'bs-c','bs-lbl',(r,c,cell)=>{
+    const key=bsKey(r,c);
+    if(occ[key]!==undefined){
+      const sid=occ[key];
+      cell.classList.add(sid===bsSelShip?'bs-sel':'bs-ship');
+      cell.onclick=()=>{bsSelShip=sid;bsRenderPlaceGrid();bsRenderShipBar();};
+    } else {
+      if(bsSelShip>=0&&bsCanPlace(bsSelShip,r,c,bsSelDir,bsPlaced))cell.classList.add('bs-preview');
+      cell.onclick=()=>bsPlaceShip(r,c);
+    }
+  });
+}
+
+function bsRenderShipBar(){
+  const el=document.getElementById('bs-ship-bar');el.innerHTML='';
+  BS_FLEET.forEach((f,i)=>{
+    const placed=!!bsPlaced.find(s=>s.id===i);
+    const btn=document.createElement('div');
+    btn.className='bs-ship-btn'+(bsSelShip===i?' bs-sel-btn':'')+(placed?' bs-done':'');
+    const dots=document.createElement('div');dots.className='bs-dots';
+    for(let j=0;j<f.size;j++){const d=document.createElement('div');d.className='bs-dot'+(bsSelShip===i?' bs-dot-g':'');dots.appendChild(d);}
+    const lbl=document.createElement('div');lbl.className='bs-sname';lbl.textContent=f.name;
+    btn.appendChild(dots);btn.appendChild(lbl);
+    btn.onclick=()=>{bsSelShip=i;bsRenderPlaceGrid();bsRenderShipBar();};
+    el.appendChild(btn);
+  });
+}
+
+function bsConfirmPlace(){
+  const board=bsBoardFromPlaced(bsPlaced);
+  if(bsLocal){
+    bsLocalB[bsPlacePhase]=board;
+    if(bsPlacePhase===0){
+      bsPlacePhase=1;
+      document.getElementById('bs-pass-icon').textContent='🔄';
+      document.getElementById('bs-pass-msg').textContent='Passez le téléphone à Joueur 2';
+      document.getElementById('bs-pass-sub').textContent='Joueur 2, placez vos bateaux — Joueur 1, ne regardez pas !';
+      document.getElementById('bs-pass-btn').textContent='Je suis prêt·e →';
+      document.getElementById('bs-pass-btn').onclick=()=>bsInitPlace('Joueur 2');
+      bsSec('bs-pass');
+    } else {
+      bsLocalTurn=1;bsLocalS=[[],[]];bsRenderGame();bsSec('bs-game');
+    }
+  } else {
+    const bk=bsMe===1?'p1board':'p2board',rk=bsMe===1?'p1ready':'p2ready';
+    bsRef.update({[bk]:JSON.stringify([...board]),[rk]:true});
+    bsSec('bs-wait-place');
+  }
+}
+
+// ── GAME ──
+function bsRenderGame(){
+  const am1=bsLocalTurn===1;
+  const myBoard=bsLocalB[am1?0:1],opBoard=bsLocalB[am1?1:0];
+  const myShots=bsLocalS[am1?0:1],opShots=bsLocalS[am1?1:0];
+  const myLeft=BS_TOTAL-opShots.filter(s=>s.hit).length;
+  const opLeft=BS_TOTAL-myShots.filter(s=>s.hit).length;
+  document.getElementById('bs-status').textContent='Joueur '+bsLocalTurn+' attaque';
+  document.getElementById('bs-my-fleet').textContent='🚢 '+myLeft;
+  document.getElementById('bs-op-fleet').textContent='🎯 '+opLeft;
+  bsDrawAttack(opBoard,myShots,true,false);
+  bsDrawDefense(myBoard,opShots);
+}
+
+function bsDrawAttack(opBoard,myShots,myTurn,remote){
+  const shotMap={}; myShots.forEach(s=>{shotMap[bsKey(s.r,s.c)]=s;});
+  bsMakeGridEl(document.getElementById('bs-attack-grid'),'bs-c','bs-lbl',(r,c,cell)=>{
+    const key=bsKey(r,c),shot=shotMap[key];
+    if(shot){cell.classList.add(shot.hit?'bs-hit':'bs-miss');cell.textContent=shot.hit?'💥':'·';}
+    else if(myTurn){
+      cell.classList.add('bs-tgt');cell.style.cursor='pointer';
+      const _r=r,_c=c;
+      if(remote)cell.onclick=()=>bsFireRemote(_r,_c,opBoard);
+      else cell.onclick=()=>bsFireLocal(_r,_c);
+    }
+  });
+}
+
+function bsDrawDefense(myBoard,opShots){
+  const shotMap={}; opShots.forEach(s=>{shotMap[bsKey(s.r,s.c)]=s;});
+  bsMakeGridEl(document.getElementById('bs-defense-grid'),'bs-cs','bs-lbl',(r,c,cell)=>{
+    const key=bsKey(r,c),shot=shotMap[key];
+    if(myBoard&&myBoard.has(key))cell.classList.add('bs-ship-d');
+    if(shot)cell.classList.add(shot.hit?'bs-hit':'bs-miss');
+  });
+}
+
+function bsFireLocal(r,c){
+  const am1=bsLocalTurn===1;
+  const opBoard=bsLocalB[am1?1:0];
+  const hit=opBoard.has(bsKey(r,c));
+  bsLocalS[am1?0:1].push({r,c,hit});
+  bsRenderGame();
+  if(bsLocalS[am1?0:1].filter(s=>s.hit).length>=BS_TOTAL){bsShowWin(bsLocalTurn);return;}
+  const next=bsLocalTurn===1?2:1;
+  document.getElementById('bs-pass-icon').textContent=hit?'💥':'💦';
+  document.getElementById('bs-pass-msg').textContent=(hit?'Touché ! 💥':'À l\'eau ! 💦')+' — Joueur '+next;
+  document.getElementById('bs-pass-sub').textContent='Joueur '+next+', à votre tour d\'attaquer';
+  document.getElementById('bs-pass-btn').textContent='C\'est à moi →';
+  document.getElementById('bs-pass-btn').onclick=()=>{bsLocalTurn=next;bsRenderGame();bsSec('bs-game');};
+  bsSec('bs-pass');
+}
+
+function bsShowWin(winner){
+  document.getElementById('bs-win-msg').textContent=bsLocal?'Joueur '+winner+' gagne ! 🏆':winner===bsMe?'Vous avez gagné ! 🏆':'L\'adversaire a gagné…';
+  document.getElementById('bs-win').classList.add('on');
+}
+function bsNewGame(){document.getElementById('bs-win').classList.remove('on');bsBackToHub();}
+
+// ── REMOTE ──
+async function bsCreateRemote(){
+  bsLocal=false;bsCode=randCode();bsMe=1;bsSaveSession();bsStarted=false;
+  await db.ref('bs/'+bsCode).set({status:'waiting',p1board:'[]',p2board:'[]',p1ready:false,p2ready:false,turn:1,p1shots:'[]',p2shots:'[]',winner:0,ts:Date.now()});
+  document.getElementById('bs-code-box').textContent=bsCode;
+  bsSec('bs-wait');
+  bsRef=db.ref('bs/'+bsCode);
+  bsListening=true;
+  bsRef.on('value',snap=>{
+    if(!snap.exists())return;
+    const d=snap.val();
+    if(d.status==='placing'&&!bsStarted){bsStarted=true;bsInitPlace('Joueur 1');}
+    else if(d.status==='placing'&&d.p1ready&&d.p2ready)bsRef.update({status:'playing'});
+    else if(d.status==='playing')bsRenderRemote(d);
+    else if(d.status==='finished'){bsSec('bs-game');bsShowWin(d.winner);}
+  });
+}
+
+function bsShareCode(){const t='Code Bataille Navale : '+bsCode;if(navigator.share)navigator.share({text:t});else if(navigator.clipboard)navigator.clipboard.writeText(t);}
+function bsCancelRemote(){if(bsRef){bsRef.off();bsRef.remove();bsRef=null;}bsListening=false;bsClearSession();bsShowMode();}
+
+async function bsJoinRemote(){
+  const val=document.getElementById('bs-input').value.trim().toUpperCase();
+  document.getElementById('bs-err').textContent='';
+  if(val.length!==4){document.getElementById('bs-err').textContent='Code à 4 lettres requis';return;}
+  let snap;try{snap=await db.ref('bs/'+val).get();}catch{document.getElementById('bs-err').textContent='Erreur réseau';return;}
+  if(!snap.exists()){document.getElementById('bs-err').textContent='Partie introuvable';return;}
+  const d=snap.val();if(d.status!=='waiting'){document.getElementById('bs-err').textContent='Partie déjà lancée';return;}
+  bsLocal=false;bsCode=val;bsMe=2;bsSaveSession();bsStarted=true;
+  bsRef=db.ref('bs/'+bsCode);
+  await bsRef.update({status:'placing'});
+  bsInitPlace('Joueur 2');
+  if(!bsListening){
+    bsListening=true;
+    bsRef.on('value',snap=>{
+      if(!snap.exists())return;
+      const d2=snap.val();
+      if(d2.status==='placing'&&d2.p1ready&&d2.p2ready)bsRef.update({status:'playing'});
+      else if(d2.status==='playing')bsRenderRemote(d2);
+      else if(d2.status==='finished'){bsSec('bs-game');bsShowWin(d2.winner);}
+    });
+  }
+}
+
+function bsRenderRemote(d){
+  const mp=bsMe===1?'p1':'p2',op=bsMe===1?'p2':'p1';
+  const myBoard=new Set(JSON.parse(d[mp+'board']||'[]'));
+  const opBoard=new Set(JSON.parse(d[op+'board']||'[]'));
+  const myShots=JSON.parse(d[mp+'shots']||'[]');
+  const opShots=JSON.parse(d[op+'shots']||'[]');
+  const turn=d.turn,myTurn=turn===bsMe;
+  document.getElementById('bs-status').textContent=myTurn?'À vous d\'attaquer !':'En attente…';
+  document.getElementById('bs-my-fleet').textContent='🚢 '+(BS_TOTAL-opShots.filter(s=>s.hit).length);
+  document.getElementById('bs-op-fleet').textContent='🎯 '+(BS_TOTAL-myShots.filter(s=>s.hit).length);
+  bsDrawAttack(opBoard,myShots,myTurn,true);
+  bsDrawDefense(myBoard,opShots);
+  bsSec('bs-game');
+}
+
+async function bsFireRemote(r,c,opBoard){
+  if(!bsRef)return;
+  const snap=await bsRef.get();const d=snap.val();
+  if(d.turn!==bsMe)return;
+  const sk=bsMe===1?'p1shots':'p2shots';
+  const shots=JSON.parse(d[sk]||'[]');
+  if(shots.find(s=>s.r===r&&s.c===c))return;
+  const hit=opBoard.has(bsKey(r,c));
+  shots.push({r,c,hit});
+  const won=shots.filter(s=>s.hit).length>=BS_TOTAL;
+  await bsRef.update({[sk]:JSON.stringify(shots),turn:bsMe===1?2:1,winner:won?bsMe:0,status:won?'finished':'playing'});
+}
+
+function bsSaveSession(){try{localStorage.setItem('duo_bs_code',bsCode);localStorage.setItem('duo_bs_me',bsMe);}catch{}}
+function bsClearSession(){try{localStorage.removeItem('duo_bs_code');localStorage.removeItem('duo_bs_me');}catch{}}
 
 // ─── UTILS ──────────────────────────────────────────────────
 function randCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ';return Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join('');}
