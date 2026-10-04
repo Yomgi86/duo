@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Two overlapping circles (Duo) -->
+    <path
+        android:fillColor="#ED254E"
+        android:pathData="M40,54 A18,18 0 1 0 40,53.99 Z"/>
+    <path
+        android:fillColor="#F3DE8A"
+        android:fillAlpha="0.9"
+        android:pathData="M68,54 A18,18 0 1 0 68,53.99 Z"/>
+    <!-- Overlap highlight -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.15"
+        android:pathData="M54,42 A18,18 0 0 1 54,66 A18,18 0 0 1 54,42 Z"/>
+</vector>
