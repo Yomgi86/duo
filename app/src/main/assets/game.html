@@ -10,10 +10,8 @@
     :root {
       --ink:       #101A21;
       --ink-2:     #21323B;
-      --ink-soft:  #5F6F75;
       --sky:       #557A86;
       --prune:     #634B66;
-      --lavender:  #D4C5E2;
       --gold:      #F3DE8A;
       --raspberry: #ED254E;
       --line:      rgba(255,255,255,0.09);
@@ -32,268 +30,114 @@
       user-select: none; -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
-
-    /* ===== SCREENS ===== */
-    .screen, .game-wrap {
-      position: fixed; inset: 0;
-      display: none; flex-direction: column;
-      background: var(--bg);
-    }
+    .screen, .game-wrap { position: fixed; inset: 0; display: none; flex-direction: column; background: var(--bg); }
     .screen.active, .game-wrap.active { display: flex; }
 
-    /* ===== TOP BAR ===== */
-    .top-bar {
-      display: flex; align-items: center;
-      padding: calc(env(safe-area-inset-top,0px) + 0.85rem) 1.25rem 0.85rem;
-      border-bottom: 1px solid var(--line);
-      flex-shrink: 0;
-    }
-    .top-back {
-      background: none; border: none; color: rgba(255,255,255,0.5);
-      font-family: inherit; font-size: 0.78rem; font-weight: 700;
-      cursor: pointer; padding: 0.3rem 0; min-width: 3.5rem;
-    }
+    .top-bar { display: flex; align-items: center; padding: calc(env(safe-area-inset-top,0px) + 0.85rem) 1.25rem 0.85rem; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+    .top-back { background: none; border: none; color: rgba(255,255,255,0.5); font-family: inherit; font-size: 0.78rem; font-weight: 700; cursor: pointer; padding: 0.3rem 0; min-width: 3.5rem; }
     .top-back:active { color: #fff; }
-    .top-title {
-      flex: 1; text-align: center;
-      font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.45);
-    }
+    .top-title { flex: 1; text-align: center; font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.45); }
     .top-right { min-width: 3.5rem; text-align: right; }
 
-    /* ===== BUTTONS ===== */
-    .btn {
-      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
-      border: none; border-radius: var(--radius);
-      font-family: inherit; font-size: 0.9rem; font-weight: 800;
-      cursor: pointer; transition: transform 120ms, opacity 120ms;
-      padding: 0.9rem 1.2rem;
-    }
+    .btn { display: flex; align-items: center; justify-content: center; border: none; border-radius: var(--radius); font-family: inherit; font-size: 0.9rem; font-weight: 800; cursor: pointer; transition: transform 120ms, opacity 120ms; padding: 0.9rem 1.2rem; }
     .btn:active { transform: scale(0.96); opacity: 0.85; }
     .btn-primary { background: var(--raspberry); color: #fff; box-shadow: 0 6px 20px rgba(237,37,78,0.3); }
     .btn-ghost   { background: var(--surf); border: 1px solid var(--line); color: rgba(255,255,255,0.72); }
     .btn-w { width: 100%; max-width: 300px; }
 
-    /* ===== HUB ===== */
-    #hub {
-      background:
-        radial-gradient(circle at 85% 8%, rgba(237,37,78,0.12), transparent 22rem),
-        radial-gradient(circle at 10% 90%, rgba(85,122,134,0.14), transparent 20rem),
-        var(--bg);
-    }
-    .hub-header {
-      padding: calc(env(safe-area-inset-top,0px) + 2rem) 1.5rem 1.5rem;
-      flex-shrink: 0;
-    }
-    .hub-eyebrow {
-      font-size: 0.62rem; font-weight: 800; letter-spacing: 0.14em;
-      text-transform: uppercase; color: rgba(255,255,255,0.35);
-      margin-bottom: 0.3rem;
-    }
-    .hub-title {
-      font-size: clamp(2.2rem, 9vw, 3rem); font-weight: 900;
-      letter-spacing: -0.025em; line-height: 1; color: #fff;
-    }
-    .hub-sub {
-      font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.4);
-      margin-top: 0.35rem;
-    }
-    .game-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 12px; padding: 0.5rem 1.25rem calc(env(safe-area-inset-bottom,0px) + 1.25rem);
-      overflow-y: auto; flex: 1;
-    }
-    .game-card {
-      background: var(--ink-2); border: 1px solid var(--line);
-      border-radius: 16px; padding: 1.1rem; cursor: pointer;
-      display: flex; flex-direction: column; gap: 0.55rem;
-      transition: transform 120ms, border-color 120ms;
-      position: relative; overflow: hidden; min-height: 130px;
-    }
+    /* HUB */
+    #hub { background: radial-gradient(circle at 85% 8%, rgba(237,37,78,0.12), transparent 22rem), radial-gradient(circle at 10% 90%, rgba(85,122,134,0.14), transparent 20rem), var(--bg); }
+    .hub-header { padding: calc(env(safe-area-inset-top,0px) + 2rem) 1.5rem 1.5rem; flex-shrink: 0; }
+    .hub-eyebrow { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.3rem; }
+    .hub-title { font-size: clamp(2.2rem, 9vw, 3rem); font-weight: 900; letter-spacing: -0.025em; line-height: 1; }
+    .hub-sub { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.4); margin-top: 0.35rem; }
+    .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0.5rem 1.25rem calc(env(safe-area-inset-bottom,0px) + 1.25rem); overflow-y: auto; flex: 1; }
+    .game-card { background: var(--ink-2); border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem; cursor: pointer; display: flex; flex-direction: column; gap: 0.55rem; transition: transform 120ms; position: relative; overflow: hidden; min-height: 130px; }
     .game-card:active { transform: scale(0.97); }
     .game-card.soon { opacity: 0.45; pointer-events: none; }
-    .card-glow {
-      position: absolute; top: -20px; right: -20px;
-      width: 80px; height: 80px; border-radius: 50%;
-      filter: blur(28px); opacity: 0.5;
-    }
+    .card-glow { position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; border-radius: 50%; filter: blur(28px); opacity: 0.5; }
     .card-icon { font-size: 1.6rem; line-height: 1; }
-    .card-name {
-      font-size: 0.88rem; font-weight: 800; line-height: 1.2;
-      color: #fff; margin-top: auto;
-    }
-    .card-badge {
-      display: inline-flex; align-items: center; gap: 0.3rem;
-      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em;
-      text-transform: uppercase; padding: 0.2rem 0.5rem;
-      border-radius: 50px; width: fit-content;
-    }
-    .badge-distance { background: rgba(237,37,78,0.18); color: var(--raspberry); }
-    .badge-local    { background: rgba(85,122,134,0.2);  color: #7eb5c2; }
-    .badge-soon     { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
+    .card-name { font-size: 0.88rem; font-weight: 800; line-height: 1.2; color: #fff; margin-top: auto; }
+    .card-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 50px; width: fit-content; }
+    .badge-both { background: rgba(237,37,78,0.15); color: #f57a94; }
+    .badge-local { background: rgba(85,122,134,0.2); color: #7eb5c2; }
+    .badge-soon  { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
     .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
-    /* ===== SHARED GAME LAYOUT ===== */
-    .game-body {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 1.25rem; padding: 1.25rem;
-      overflow-y: auto;
-    }
-    .section-label {
-      font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em;
-      text-transform: uppercase; color: rgba(255,255,255,0.35);
-      text-align: center;
-    }
-    .game-footer {
-      padding: 1rem 1.25rem calc(env(safe-area-inset-bottom,0px) + 1rem);
-      display: flex; flex-direction: column; align-items: center; gap: 0.65rem;
-      flex-shrink: 0;
-    }
-
-    /* ===== PUISSANCE 4 ===== */
-    #p4-home { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding: 2rem; }
-    .p4-icon { font-size: 3rem; }
-    .p4-title { font-size: 1.8rem; font-weight: 900; letter-spacing: -0.02em; }
-    #p4-wait, #p4-join, #p4-game { flex: 1; display: flex; flex-direction: column; }
-    .p4-wait-body, .p4-join-body {
-      flex: 1; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; gap: 1.4rem; padding: 1.5rem;
-    }
-    .code-box {
-      font-size: 3rem; font-weight: 900; letter-spacing: 0.18em; text-indent: 0.18em;
-      background: var(--surf); border: 1px solid var(--line);
-      border-radius: var(--radius); padding: 0.9rem 2rem; line-height: 1;
-    }
-    .wait-row { display: flex; align-items: center; gap: 0.6rem; color: rgba(255,255,255,0.4); font-size: 0.82rem; font-weight: 600; }
-    .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.12); border-top-color: var(--sky); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    /* GAME COMMON */
+    .centered-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding: 2rem; }
+    .mode-title { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em; text-align: center; }
+    .mode-sub { font-size: 0.82rem; color: rgba(255,255,255,.45); text-align: center; max-width: 280px; }
+    .btn-group { display: flex; flex-direction: column; gap: .65rem; width: 100%; max-width: 300px; }
+    .sec-lbl { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,.35); text-align: center; }
+    .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.12); border-top-color: var(--sky); border-radius: 50%; animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .code-input {
-      background: var(--surf); border: 1px solid var(--line); color: #fff;
-      font-family: inherit; font-size: 2.4rem; font-weight: 900;
-      letter-spacing: 0.18em; text-indent: 0.18em; text-align: center;
-      padding: 0.85rem 1.5rem; border-radius: var(--radius);
-      width: 100%; max-width: 300px; text-transform: uppercase;
-    }
+    .code-box { font-size: 3rem; font-weight: 900; letter-spacing: .18em; text-indent: .18em; background: var(--surf); border: 1px solid var(--line); border-radius: var(--radius); padding: .9rem 2rem; line-height: 1; }
+    .wait-row { display: flex; align-items: center; gap: .6rem; color: rgba(255,255,255,.4); font-size: .82rem; font-weight: 600; }
+    .code-input { background: var(--surf); border: 1px solid var(--line); color: #fff; font-family: inherit; font-size: 2.4rem; font-weight: 900; letter-spacing: .18em; text-indent: .18em; text-align: center; padding: .85rem 1.5rem; border-radius: var(--radius); width: 100%; max-width: 300px; text-transform: uppercase; }
     .code-input:focus { outline: none; border-color: var(--sky); }
-    .err-msg { font-size: 0.78rem; font-weight: 700; color: var(--raspberry); min-height: 1.2em; text-align: center; }
-    /* Board */
-    .p4-game-inner {
-      flex: 1; display: flex; flex-direction: column;
-      justify-content: space-between; padding-bottom: calc(env(safe-area-inset-bottom,0px) + 0.8rem);
-    }
-    .turn-pill {
-      display: flex; align-items: center; gap: 0.5rem;
-      background: var(--surf); border: 1px solid var(--line);
-      border-radius: 50px; padding: 0.4rem 0.75rem; width: fit-content; margin: 0 auto;
-    }
-    .turn-disc { width: 10px; height: 10px; border-radius: 50%; transition: background 0.2s; }
-    .turn-text { font-size: 0.72rem; font-weight: 800; }
-    .board-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: 0.5rem; }
-    #p4-board {
-      display: grid; grid-template-columns: repeat(7, var(--cell)); grid-template-rows: repeat(6, var(--cell));
-      gap: 5px; background: var(--ink-2); border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px; padding: 7px; box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-    }
-    .cell { width: var(--cell); height: var(--cell); border-radius: 50%; background: rgba(255,255,255,0.04); }
+    .err-msg { font-size: .78rem; font-weight: 700; color: var(--raspberry); min-height: 1.2em; text-align: center; }
+
+    /* PUISSANCE 4 */
+    .p4-hud { padding: .85rem 1.25rem; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .turn-pill { display: flex; align-items: center; gap: .5rem; background: var(--surf); border: 1px solid var(--line); border-radius: 50px; padding: .4rem .75rem; }
+    .turn-disc { width: 10px; height: 10px; border-radius: 50%; transition: background .2s; }
+    .turn-text { font-size: .72rem; font-weight: 800; }
+    .board-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: .5rem; }
+    #p4-board { display: grid; grid-template-columns: repeat(7, var(--cell)); grid-template-rows: repeat(6, var(--cell)); gap: 5px; background: var(--ink-2); border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 7px; box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+    .cell { width: var(--cell); height: var(--cell); border-radius: 50%; background: rgba(255,255,255,.04); }
     .cell.p1 { background: var(--p1); animation: pop .16s ease-out; box-shadow: 0 2px 10px rgba(237,37,78,.4); }
     .cell.p2 { background: var(--p2); animation: pop .16s ease-out; box-shadow: 0 2px 10px rgba(243,222,138,.3); }
-    @keyframes pop { from { transform: scale(0.4); opacity: 0.5; } to { transform: scale(1); } }
+    @keyframes pop { from { transform: scale(.4); opacity: .5; } to { transform: scale(1); } }
     .cell.win1 { background: var(--p1); animation: gr .65s ease infinite alternate; }
     .cell.win2 { background: var(--p2); animation: gy .65s ease infinite alternate; }
     @keyframes gr { to { box-shadow: 0 0 16px 5px rgba(237,37,78,.7); } }
     @keyframes gy { to { box-shadow: 0 0 16px 5px rgba(243,222,138,.6); } }
-    .col-hint { text-align: center; font-size: 0.66rem; font-weight: 700; color: rgba(255,255,255,0.28); padding: 0.3rem; min-height: 1.5rem; }
-    /* Win overlay */
-    .win-overlay {
-      display: none; position: absolute; inset: 0;
-      background: rgba(13,22,32,.88); backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      flex-direction: column; align-items: center; justify-content: center;
-      gap: 1.8rem; z-index: 20;
-    }
+    .col-hint { text-align: center; font-size: .66rem; font-weight: 700; color: rgba(255,255,255,.28); padding: .3rem; min-height: 1.5rem; }
+    .win-overlay { display: none; position: absolute; inset: 0; background: rgba(13,22,32,.88); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); flex-direction: column; align-items: center; justify-content: center; gap: 1.8rem; z-index: 20; }
     .win-overlay.on { display: flex; }
-    .win-card {
-      background: var(--ink-2); border: 1px solid var(--line); border-radius: 16px;
-      padding: 1.8rem 2.5rem; text-align: center;
-      box-shadow: 0 20px 56px rgba(0,0,0,.4); min-width: 240px;
-    }
-    .win-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 0.4rem; }
-    .win-msg { font-size: 2rem; font-weight: 900; letter-spacing: -0.02em; }
-    .win-btns { display: flex; flex-direction: column; gap: 0.6rem; width: 100%; max-width: 280px; }
+    .win-card { background: var(--ink-2); border: 1px solid var(--line); border-radius: 16px; padding: 1.8rem 2.5rem; text-align: center; box-shadow: 0 20px 56px rgba(0,0,0,.4); min-width: 240px; }
+    .win-label { font-size: .65rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: .4rem; }
+    .win-msg   { font-size: 2rem; font-weight: 900; letter-spacing: -.02em; }
+    .win-btns  { display: flex; flex-direction: column; gap: .6rem; width: 100%; max-width: 280px; }
 
-    /* ===== VÉRITÉ OU DÉFI ===== */
-    .vod-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding: 1.5rem; }
-    .vod-player { display: flex; align-items: center; gap: 0.7rem; }
-    .player-dot { width: 28px; height: 28px; border-radius: 50%; font-size: 0.65rem; font-weight: 900; display: flex; align-items: center; justify-content: center; }
-    .player-name { font-size: 0.82rem; font-weight: 700; color: rgba(255,255,255,.65); }
-    .vod-card {
-      width: 100%; max-width: 340px; min-height: 200px;
-      background: var(--ink-2); border: 1px solid var(--line); border-radius: 18px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 0.8rem; padding: 2rem 1.5rem; text-align: center;
-      box-shadow: 0 12px 36px rgba(0,0,0,.35);
-    }
-    .vod-type-badge {
-      font-size: 0.6rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase;
-      padding: 0.25rem 0.7rem; border-radius: 50px;
-    }
-    .vod-type-v { background: rgba(85,122,134,0.25); color: #7eb5c2; }
-    .vod-type-d { background: rgba(237,37,78,0.2); color: var(--raspberry); }
-    .vod-text { font-size: 1.15rem; font-weight: 700; line-height: 1.45; color: #fff; }
-    .vod-counter { font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,.3); }
-    .vod-footer { padding: 1rem 1.5rem calc(env(safe-area-inset-bottom,0px) + 1rem); display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+    /* VOD */
+    .vod-card { width: 100%; max-width: 340px; min-height: 200px; background: var(--ink-2); border: 1px solid var(--line); border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .8rem; padding: 2rem 1.5rem; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,.35); }
+    .vod-badge { font-size: .6rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; padding: .25rem .7rem; border-radius: 50px; }
+    .vod-v { background: rgba(85,122,134,.25); color: #7eb5c2; }
+    .vod-d { background: rgba(237,37,78,.2); color: var(--raspberry); }
+    .vod-text    { font-size: 1.15rem; font-weight: 700; line-height: 1.45; }
+    .vod-counter { font-size: .65rem; font-weight: 700; color: rgba(255,255,255,.3); }
+    .player-dot  { width: 28px; height: 28px; border-radius: 50%; font-size: .65rem; font-weight: 900; display: flex; align-items: center; justify-content: center; }
 
-    /* ===== ROUE ===== */
-    .roue-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 1rem; }
+    /* ROUE */
     .wheel-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
-    .wheel-pointer {
-      position: absolute; top: -4px; left: 50%;
-      transform: translateX(-50%);
-      width: 0; height: 0;
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-top: 20px solid #fff;
-      z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,.5));
-    }
+    .wheel-pointer { position: absolute; top: -4px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #fff; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
     #wheel-canvas { border-radius: 50%; box-shadow: 0 12px 40px rgba(0,0,0,.5); }
-    .roue-result {
-      display: none; background: var(--ink-2); border: 1px solid var(--line);
-      border-radius: 14px; padding: 1.2rem 1.8rem; text-align: center;
-      font-size: 1rem; font-weight: 700; color: #fff; max-width: 300px;
-      animation: fadeUp .3s ease;
-    }
+    .roue-result { display: none; background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 1.2rem 1.8rem; text-align: center; font-size: 1rem; font-weight: 700; max-width: 300px; animation: fadeUp .3s ease; }
     @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; } }
-    .roue-footer { padding: 0.75rem 1.5rem calc(env(safe-area-inset-bottom,0px) + 1rem); display: flex; justify-content: center; }
 
-    /* ===== QUI ME CONNAIT ===== */
-    .qmc-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; padding: 1.5rem; }
-    .qmc-phase { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,.35); }
-    .qmc-question { font-size: 1.15rem; font-weight: 800; line-height: 1.4; text-align: center; max-width: 320px; }
-    .qmc-who { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,.5); text-align: center; }
-    .qmc-input {
-      background: var(--surf); border: 1px solid var(--line); color: #fff;
-      font-family: inherit; font-size: 1rem; font-weight: 700;
-      padding: 0.85rem 1rem; border-radius: var(--radius); width: 100%; max-width: 340px;
-      text-align: center;
-    }
-    .qmc-input:focus { outline: none; border-color: var(--sky); }
-    .qmc-compare { display: none; flex-direction: column; gap: 0.75rem; width: 100%; max-width: 340px; }
-    .qmc-answer-box {
-      background: var(--ink-2); border: 1px solid var(--line); border-radius: var(--radius);
-      padding: 0.9rem 1.1rem;
-    }
-    .qmc-answer-who { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 0.25rem; }
-    .qmc-answer-val { font-size: 0.95rem; font-weight: 700; color: #fff; }
-    .qmc-score { display: flex; gap: 2rem; justify-content: center; margin-top: 0.5rem; }
-    .qmc-score-col { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; }
-    .qmc-score-num { font-size: 2rem; font-weight: 900; }
-    .qmc-score-lbl { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,.35); }
-    .qmc-footer { padding: 0.75rem 1.5rem calc(env(safe-area-inset-bottom,0px) + 1rem); display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+    /* QMC */
+    .qmc-q    { font-size: 1.15rem; font-weight: 800; line-height: 1.4; text-align: center; max-width: 320px; }
+    .qmc-who  { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.5); text-align: center; }
+    .qmc-in   { background: var(--surf); border: 1px solid var(--line); color: #fff; font-family: inherit; font-size: 1rem; font-weight: 700; padding: .85rem 1rem; border-radius: var(--radius); width: 100%; max-width: 340px; text-align: center; }
+    .qmc-in:focus { outline: none; border-color: var(--sky); }
+    .qmc-compare { display: none; flex-direction: column; gap: .75rem; width: 100%; max-width: 340px; }
+    .ans-box  { background: var(--ink-2); border: 1px solid var(--line); border-radius: var(--radius); padding: .9rem 1.1rem; }
+    .ans-who  { font-size: .6rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: .25rem; }
+    .ans-val  { font-size: .95rem; font-weight: 700; }
+    .score-row { display: flex; gap: 2rem; justify-content: center; }
+    .score-col { display: flex; flex-direction: column; align-items: center; gap: .2rem; }
+    .score-num { font-size: 2rem; font-weight: 900; }
+    .score-lbl { font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); }
+    .qmc-waiting { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2rem; padding: 2rem; text-align: center; }
+    .qmc-wait-msg { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,.65); }
+    .qmc-wait-sub { font-size: .65rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.3); }
   </style>
 </head>
 <body>
 
-<!-- ===================== HUB ===================== -->
+<!-- HUB -->
 <div id="hub" class="screen active">
   <div class="hub-header">
     <div class="hub-eyebrow">by Sovnge</div>
@@ -301,106 +145,90 @@
     <div class="hub-sub">Jeux à deux · à distance ou en local</div>
   </div>
   <div class="game-grid">
-
     <div class="game-card" onclick="openGame('p4')">
       <div class="card-glow" style="background:var(--raspberry)"></div>
       <div class="card-icon">🔴</div>
       <div class="card-name">Puissance 4</div>
-      <div class="card-badge badge-distance"><span class="badge-dot"></span>À distance</div>
+      <div class="card-badge badge-both"><span class="badge-dot"></span>Local & Distance</div>
     </div>
-
     <div class="game-card" onclick="openGame('vod')">
       <div class="card-glow" style="background:var(--sky)"></div>
       <div class="card-icon">🎴</div>
       <div class="card-name">Vérité ou Défi</div>
       <div class="card-badge badge-local"><span class="badge-dot"></span>En local</div>
     </div>
-
     <div class="game-card" onclick="openGame('roue')">
       <div class="card-glow" style="background:var(--gold)"></div>
       <div class="card-icon">🎡</div>
       <div class="card-name">Roue des activités</div>
       <div class="card-badge badge-local"><span class="badge-dot"></span>En local</div>
     </div>
-
     <div class="game-card" onclick="openGame('qmc')">
       <div class="card-glow" style="background:var(--prune)"></div>
       <div class="card-icon">🧠</div>
       <div class="card-name">Qui me connaît ?</div>
-      <div class="card-badge badge-local"><span class="badge-dot"></span>En local</div>
+      <div class="card-badge badge-both"><span class="badge-dot"></span>Local & Distance</div>
     </div>
-
     <div class="game-card soon">
       <div class="card-icon">🚢</div>
       <div class="card-name">Bataille navale</div>
       <div class="card-badge badge-soon">Bientôt</div>
     </div>
-
     <div class="game-card soon">
       <div class="card-icon">📝</div>
       <div class="card-name">Petit Bac</div>
       <div class="card-badge badge-soon">Bientôt</div>
     </div>
-
   </div>
 </div>
 
-<!-- ===================== PUISSANCE 4 ===================== -->
+<!-- PUISSANCE 4 -->
 <div id="game-p4" class="game-wrap">
   <div class="top-bar">
-    <button class="top-back" onclick="closeGame('p4')">← Retour</button>
+    <button class="top-back" onclick="p4BackToHub()">← Retour</button>
     <div class="top-title">Puissance 4</div>
     <div class="top-right"></div>
   </div>
 
-  <!-- P4: Accueil -->
-  <div id="p4-home">
-    <div class="p4-icon">🔴🟡</div>
-    <div class="p4-title">Puissance 4</div>
-    <div style="display:flex;flex-direction:column;gap:.65rem;width:100%;max-width:300px">
-      <button class="btn btn-primary" onclick="p4Create()">Créer une partie</button>
-      <button class="btn btn-ghost" onclick="p4ShowJoin()">Rejoindre</button>
+  <div id="p4-mode" class="centered-body">
+    <div style="font-size:2.2rem">🔴🟡</div>
+    <div class="mode-title">Puissance 4</div>
+    <div class="btn-group">
+      <button class="btn btn-ghost" onclick="p4StartLocal()">Jouer en local</button>
+      <button class="btn btn-primary" onclick="p4Create()">Créer une partie à distance</button>
+      <button class="btn btn-ghost" onclick="p4ShowJoin()">Rejoindre une partie</button>
     </div>
   </div>
 
-  <!-- P4: Attente -->
-  <div id="p4-wait" style="display:none">
-    <div class="p4-wait-body">
-      <div class="section-label">Code de la partie</div>
-      <div class="code-box" id="p4-code">----</div>
-      <div class="wait-row"><div class="spinner"></div>En attente de l'adversaire…</div>
-      <button class="btn btn-ghost btn-w" onclick="p4Share()">Partager le code ↗</button>
-      <button class="btn btn-ghost btn-w" onclick="p4Cancel()">Annuler</button>
+  <div id="p4-wait" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;padding:1.5rem">
+    <div class="sec-lbl">Code de la partie</div>
+    <div class="code-box" id="p4-code">----</div>
+    <div class="wait-row"><div class="spinner"></div>En attente de l'adversaire…</div>
+    <button class="btn btn-ghost btn-w" onclick="p4Share()">Partager le code ↗</button>
+    <button class="btn btn-ghost btn-w" onclick="p4Cancel()">Annuler</button>
+  </div>
+
+  <div id="p4-join" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:1.5rem">
+    <input id="p4-input" class="code-input" maxlength="4" placeholder="CODE" autocomplete="off"
+      oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')"
+      onkeydown="if(event.key==='Enter')p4Join()">
+    <div id="p4-err" class="err-msg"></div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="p4Join()">Rejoindre</button>
+      <button class="btn btn-ghost" onclick="p4ShowMode()">Retour</button>
     </div>
   </div>
 
-  <!-- P4: Rejoindre -->
-  <div id="p4-join" style="display:none">
-    <div class="p4-join-body">
-      <input id="p4-input" class="code-input" maxlength="4" placeholder="CODE" autocomplete="off"
-        oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')"
-        onkeydown="if(event.key==='Enter')p4Join()">
-      <div id="p4-err" class="err-msg"></div>
-      <div style="display:flex;flex-direction:column;gap:.65rem;width:100%;max-width:300px">
-        <button class="btn btn-primary" onclick="p4Join()">Rejoindre la partie</button>
-        <button class="btn btn-ghost" onclick="p4BackHome()">Retour</button>
+  <div id="p4-game" style="display:none;flex:1;flex-direction:column;position:relative">
+    <div class="p4-hud">
+      <div class="turn-pill">
+        <div class="turn-disc" id="p4-disc"></div>
+        <span class="turn-text" id="p4-turn-txt">—</span>
       </div>
+      <button class="top-back" onclick="p4Quit()">Quitter ×</button>
     </div>
-  </div>
-
-  <!-- P4: Jeu -->
-  <div id="p4-game" style="display:none">
-    <div class="p4-game-inner">
-      <div style="padding:.85rem 1.25rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">
-        <div class="turn-pill">
-          <div class="turn-disc" id="p4-disc"></div>
-          <span class="turn-text" id="p4-turn-txt">—</span>
-        </div>
-        <button class="top-back" onclick="p4Quit()">Quitter ×</button>
-      </div>
-      <div class="board-area"><div id="p4-board"></div></div>
-      <div class="col-hint" id="p4-hint"></div>
-    </div>
+    <div class="board-area"><div id="p4-board"></div></div>
+    <div class="col-hint" id="p4-hint"></div>
     <div class="win-overlay" id="p4-win">
       <div class="win-card">
         <div class="win-label" id="p4-win-lbl">Résultat</div>
@@ -414,554 +242,598 @@
   </div>
 </div>
 
-<!-- ===================== VÉRITÉ OU DÉFI ===================== -->
+<!-- VÉRITÉ OU DÉFI -->
 <div id="game-vod" class="game-wrap">
   <div class="top-bar">
     <button class="top-back" onclick="closeGame('vod');vodReset()">← Retour</button>
     <div class="top-title">Vérité ou Défi</div>
     <div class="top-right"></div>
   </div>
-
-  <!-- VOD: Accueil -->
-  <div id="vod-home" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem">
+  <div id="vod-home" class="centered-body">
     <div style="font-size:2.5rem">🎴</div>
-    <div style="font-size:1.5rem;font-weight:900;letter-spacing:-0.02em">Vérité ou Défi</div>
-    <div style="font-size:.82rem;color:rgba(255,255,255,.45);text-align:center">Questions et défis pour en apprendre plus l'un sur l'autre</div>
-    <div style="display:flex;flex-direction:column;gap:.65rem;width:100%;max-width:300px;margin-top:.5rem">
-      <button class="btn btn-primary" onclick="vodStart()">Commencer</button>
-    </div>
+    <div class="mode-title">Vérité ou Défi</div>
+    <div class="mode-sub">30 cartes mélangées, alternance entre les joueurs</div>
+    <div class="btn-group"><button class="btn btn-primary" onclick="vodStart()">Commencer</button></div>
   </div>
-
-  <!-- VOD: Jeu -->
   <div id="vod-game" style="display:none;flex:1;flex-direction:column">
-    <div class="vod-body">
-      <div class="vod-player">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:1.5rem">
+      <div style="display:flex;align-items:center;gap:.7rem">
         <div class="player-dot" id="vod-pdot" style="background:var(--raspberry);color:#fff">J1</div>
-        <div class="player-name" id="vod-pname">Joueur 1</div>
+        <div style="font-size:.82rem;font-weight:700;color:rgba(255,255,255,.65)" id="vod-pname">Joueur 1</div>
       </div>
       <div class="vod-card">
-        <div class="vod-type-badge" id="vod-badge">Vérité</div>
+        <div class="vod-badge" id="vod-badge">Vérité</div>
         <div class="vod-text" id="vod-text">…</div>
         <div class="vod-counter" id="vod-counter">1 / 30</div>
       </div>
     </div>
-    <div class="vod-footer">
+    <div style="padding:1rem 1.5rem calc(env(safe-area-inset-bottom,0px) + 1rem);display:flex;flex-direction:column;align-items:center;gap:.6rem">
       <button class="btn btn-primary btn-w" onclick="vodNext()">Carte suivante →</button>
       <button class="btn btn-ghost btn-w" onclick="vodReset();document.getElementById('vod-home').style.display='flex';document.getElementById('vod-game').style.display='none'">Recommencer</button>
     </div>
   </div>
 </div>
 
-<!-- ===================== ROUE DES ACTIVITÉS ===================== -->
+<!-- ROUE -->
 <div id="game-roue" class="game-wrap">
   <div class="top-bar">
     <button class="top-back" onclick="closeGame('roue')">← Retour</button>
     <div class="top-title">Roue des activités</div>
     <div class="top-right"></div>
   </div>
-  <div class="roue-body">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:1rem;overflow:hidden">
     <div class="wheel-wrap">
       <div class="wheel-pointer"></div>
       <canvas id="wheel-canvas" width="280" height="280"></canvas>
     </div>
     <div class="roue-result" id="roue-result"></div>
   </div>
-  <div class="roue-footer">
+  <div style="padding:.75rem 1.5rem calc(env(safe-area-inset-bottom,0px) + 1rem);display:flex;justify-content:center">
     <button class="btn btn-primary btn-w" id="roue-btn" onclick="roueSpin()">Faire tourner !</button>
   </div>
 </div>
 
-<!-- ===================== QUI ME CONNAIT ? ===================== -->
+<!-- QUI ME CONNAÎT ? -->
 <div id="game-qmc" class="game-wrap">
   <div class="top-bar">
-    <button class="top-back" onclick="closeGame('qmc');qmcReset()">← Retour</button>
+    <button class="top-back" onclick="qmcBackToHub()">← Retour</button>
     <div class="top-title">Qui me connaît ?</div>
-    <div class="top-right" id="qmc-score-top" style="font-size:.75rem;font-weight:800;color:rgba(255,255,255,.45)"></div>
+    <div class="top-right" id="qmc-top-score" style="font-size:.75rem;font-weight:800;color:rgba(255,255,255,.45)"></div>
   </div>
 
-  <!-- QMC: Accueil -->
-  <div id="qmc-home" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem">
+  <!-- Choix mode -->
+  <div id="qmc-mode" class="centered-body">
     <div style="font-size:2.5rem">🧠</div>
-    <div style="font-size:1.4rem;font-weight:900;letter-spacing:-0.02em;text-align:center">Qui vous connaît le mieux ?</div>
-    <div style="font-size:.82rem;color:rgba(255,255,255,.45);text-align:center">Devinez les réponses de l'autre joueur. Comptez vos points !</div>
-    <div style="display:flex;flex-direction:column;gap:.65rem;width:100%;max-width:300px;margin-top:.5rem">
-      <button class="btn btn-primary" onclick="qmcStart()">Commencer</button>
+    <div class="mode-title">Qui me connaît le mieux ?</div>
+    <div class="mode-sub">Devinez les réponses de l'autre. En local ou à distance sur deux téléphones.</div>
+    <div class="btn-group">
+      <button class="btn btn-ghost" onclick="qmcStartLocal()">Jouer en local</button>
+      <button class="btn btn-primary" onclick="qmcCreateRemote()">Créer une partie à distance</button>
+      <button class="btn btn-ghost" onclick="qmcShowJoin()">Rejoindre une partie</button>
     </div>
   </div>
 
-  <!-- QMC: Jeu -->
-  <div id="qmc-game" style="display:none;flex:1;flex-direction:column">
-    <div class="qmc-body">
-      <div class="qmc-phase" id="qmc-phase">Phase 1 · Questions sur Joueur 1</div>
-      <div class="qmc-question" id="qmc-q">…</div>
-      <div class="qmc-who" id="qmc-who">Joueur 2, quelle est votre réponse ?</div>
-      <input class="qmc-input" id="qmc-ans" placeholder="Votre réponse…" autocomplete="off">
-      <div class="qmc-compare" id="qmc-compare">
-        <div class="qmc-answer-box">
-          <div class="qmc-answer-who" id="qmc-a-who1">Joueur 2 a répondu</div>
-          <div class="qmc-answer-val" id="qmc-a-val1">—</div>
+  <!-- Attente remote -->
+  <div id="qmc-wait" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;padding:1.5rem">
+    <div class="sec-lbl">Code de la partie</div>
+    <div class="code-box" id="qmc-code-box">----</div>
+    <div class="wait-row"><div class="spinner"></div>En attente de l'autre joueur…</div>
+    <button class="btn btn-ghost btn-w" onclick="qmcShareCode()">Partager le code ↗</button>
+    <button class="btn btn-ghost btn-w" onclick="qmcCancelRemote()">Annuler</button>
+  </div>
+
+  <!-- Rejoindre remote -->
+  <div id="qmc-join" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:1.5rem">
+    <input id="qmc-input" class="code-input" maxlength="4" placeholder="CODE" autocomplete="off"
+      oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')"
+      onkeydown="if(event.key==='Enter')qmcJoinRemote()">
+    <div id="qmc-err" class="err-msg"></div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="qmcJoinRemote()">Rejoindre</button>
+      <button class="btn btn-ghost" onclick="qmcShowMode()">Retour</button>
+    </div>
+  </div>
+
+  <!-- Jeu local -->
+  <div id="qmc-local" style="display:none;flex:1;flex-direction:column">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;padding:1.5rem">
+      <div class="sec-lbl" id="qmcl-phase">Phase 1 · Sur Joueur 1</div>
+      <div class="qmc-q" id="qmcl-q">…</div>
+      <div class="qmc-who" id="qmcl-who">…</div>
+      <input class="qmc-in" id="qmcl-ans" placeholder="Votre réponse…" autocomplete="off">
+      <div class="qmc-compare" id="qmcl-compare">
+        <div class="ans-box">
+          <div class="ans-who" id="qmcl-a-who1">Joueur 2 a répondu</div>
+          <div class="ans-val" id="qmcl-a-val1">—</div>
         </div>
-        <div class="qmc-answer-box">
-          <div class="qmc-answer-who" id="qmc-a-who2">Bonne réponse (Joueur 1)</div>
-          <div class="qmc-answer-val" id="qmc-a-val2"></div>
-          <input class="qmc-input" id="qmc-real" placeholder="Votre vraie réponse…" autocomplete="off" style="margin-top:.6rem;font-size:.85rem;padding:.6rem .8rem">
+        <div class="ans-box">
+          <div class="ans-who" id="qmcl-a-who2">Vraie réponse :</div>
+          <input class="qmc-in" id="qmcl-real" placeholder="Votre vraie réponse…" autocomplete="off" style="margin-top:.4rem;font-size:.85rem;padding:.6rem .8rem">
         </div>
         <div style="display:flex;gap:.6rem;justify-content:center;margin-top:.25rem">
-          <button class="btn btn-ghost" style="flex:1;max-width:140px" onclick="qmcScore(false)">❌ Raté</button>
-          <button class="btn btn-primary" style="flex:1;max-width:140px" onclick="qmcScore(true)">✓ Correct</button>
+          <button class="btn btn-ghost" style="flex:1;max-width:140px" onclick="qmclScore(false)">❌ Raté</button>
+          <button class="btn btn-primary" style="flex:1;max-width:140px" onclick="qmclScore(true)">✓ Correct</button>
         </div>
       </div>
-      <div class="qmc-score" id="qmc-scores" style="display:none">
-        <div class="qmc-score-col">
-          <div class="qmc-score-num" id="qmc-s1" style="color:var(--raspberry)">0</div>
-          <div class="qmc-score-lbl">Joueur 1</div>
-        </div>
-        <div class="qmc-score-col">
-          <div class="qmc-score-num" id="qmc-s2" style="color:var(--gold)">0</div>
-          <div class="qmc-score-lbl">Joueur 2</div>
-        </div>
+      <div class="score-row" id="qmcl-scores" style="display:none">
+        <div class="score-col"><div class="score-num" id="qmcl-s1" style="color:var(--raspberry)">0</div><div class="score-lbl">J1</div></div>
+        <div class="score-col"><div class="score-num" id="qmcl-s2" style="color:var(--gold)">0</div><div class="score-lbl">J2</div></div>
       </div>
     </div>
-    <div class="qmc-footer">
-      <button class="btn btn-primary btn-w" id="qmc-btn" onclick="qmcAction()">Valider ma réponse</button>
-      <button class="btn btn-ghost btn-w" onclick="qmcReset();document.getElementById('qmc-home').style.display='flex';document.getElementById('qmc-game').style.display='none'">Recommencer</button>
+    <div style="padding:.75rem 1.5rem calc(env(safe-area-inset-bottom,0px) + 1rem);display:flex;flex-direction:column;align-items:center;gap:.6rem">
+      <button class="btn btn-primary btn-w" id="qmcl-btn" onclick="qmclAction()">Valider ma réponse</button>
+      <button class="btn btn-ghost btn-w" onclick="qmcShowMode()">Quitter</button>
+    </div>
+  </div>
+
+  <!-- Jeu remote -->
+  <div id="qmc-remote" style="display:none;flex:1;flex-direction:column">
+    <div id="qmcr-waiting" class="qmc-waiting" style="display:none">
+      <div class="spinner" style="width:24px;height:24px;border-width:3px"></div>
+      <div class="qmc-wait-msg" id="qmcr-wait-msg">En attente…</div>
+      <div class="qmc-wait-sub" id="qmcr-wait-sub"></div>
+    </div>
+    <div id="qmcr-active" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;padding:1.5rem">
+      <div class="sec-lbl" id="qmcr-phase-lbl">Phase 1</div>
+      <div class="qmc-q" id="qmcr-q">…</div>
+      <div class="qmc-who" id="qmcr-who">Votre réponse :</div>
+      <input class="qmc-in" id="qmcr-ans" placeholder="Votre réponse…" autocomplete="off">
+      <div id="qmcr-err" class="err-msg"></div>
+    </div>
+    <div id="qmcr-reveal" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;padding:1.5rem">
+      <div class="sec-lbl" id="qmcr-rev-lbl">Résultat</div>
+      <div class="qmc-q" id="qmcr-rev-q">…</div>
+      <div style="display:flex;flex-direction:column;gap:.75rem;width:100%;max-width:340px">
+        <div class="ans-box">
+          <div class="ans-who" id="qmcr-g-who">Devineur a répondu</div>
+          <div class="ans-val" id="qmcr-g-val">—</div>
+        </div>
+        <div class="ans-box">
+          <div class="ans-who" id="qmcr-s-who">Vraie réponse</div>
+          <div class="ans-val" id="qmcr-s-val">—</div>
+        </div>
+      </div>
+      <div id="qmcr-judge-btns" style="display:none;flex-direction:row;gap:.6rem;width:100%;max-width:300px">
+        <button class="btn btn-ghost" style="flex:1" onclick="qmcrScore(false)">❌ Raté</button>
+        <button class="btn btn-primary" style="flex:1" onclick="qmcrScore(true)">✓ Correct</button>
+      </div>
+      <div id="qmcr-judge-wait" style="display:none;font-size:.82rem;font-weight:700;color:rgba(255,255,255,.4)">En attente du verdict…</div>
+      <div class="score-row">
+        <div class="score-col"><div class="score-num" id="qmcr-s1" style="color:var(--raspberry)">0</div><div class="score-lbl">J1</div></div>
+        <div class="score-col"><div class="score-num" id="qmcr-s2" style="color:var(--gold)">0</div><div class="score-lbl">J2</div></div>
+      </div>
+    </div>
+    <div style="padding:.75rem 1.5rem calc(env(safe-area-inset-bottom,0px) + 1rem);display:flex;flex-direction:column;align-items:center;gap:.6rem">
+      <button class="btn btn-primary btn-w" id="qmcr-btn" onclick="qmcrAction()" style="display:none">Valider →</button>
+      <button class="btn btn-ghost btn-w" onclick="qmcrQuit()">Quitter</button>
     </div>
   </div>
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
 firebase.initializeApp({
-  apiKey:            "AIzaSyBsxjveQMKwY3CaDhjO2NZmmrYE2qYXP5Y",
-  authDomain:        "puissance4-sovnge.firebaseapp.com",
-  databaseURL:       "https://puissance4-sovnge-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId:         "puissance4-sovnge",
-  storageBucket:     "puissance4-sovnge.firebasestorage.app",
-  messagingSenderId: "874831266504",
-  appId:             "1:874831266504:web:5bfbbe0eeaa530a3c35bfd"
+  apiKey:"AIzaSyBsxjveQMKwY3CaDhjO2NZmmrYE2qYXP5Y",
+  authDomain:"puissance4-sovnge.firebaseapp.com",
+  databaseURL:"https://puissance4-sovnge-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"puissance4-sovnge",
+  storageBucket:"puissance4-sovnge.firebasestorage.app",
+  messagingSenderId:"874831266504",
+  appId:"1:874831266504:web:5bfbbe0eeaa530a3c35bfd"
 });
 const db = firebase.database();
 
-// ============================================================
-//  HUB ROUTING
-// ============================================================
-function openGame(id) {
-  document.getElementById('hub').classList.remove('active');
-  const g = document.getElementById('game-' + id);
-  g.classList.add('active');
-  if (id === 'roue') roueInit();
-}
-function closeGame(id) {
-  document.getElementById('game-' + id).classList.remove('active');
-  document.getElementById('hub').classList.add('active');
+// ─── ROUTING ────────────────────────────────────────────────
+function openGame(id){document.getElementById('hub').classList.remove('active');document.getElementById('game-'+id).classList.add('active');if(id==='roue')roueInit();}
+function closeGame(id){document.getElementById('game-'+id).classList.remove('active');document.getElementById('hub').classList.add('active');}
+
+// ─── PUISSANCE 4 ────────────────────────────────────────────
+let p4me=0, p4code='', p4ref=null, p4listening=false;
+let p4board=[], p4turn=1, p4status='', p4local=false;
+
+function p4ShowMode(){['p4-mode','p4-wait','p4-join','p4-game'].forEach(s=>{document.getElementById(s).style.display=s==='p4-mode'?'flex':'none';});}
+function p4ShowJoin(){document.getElementById('p4-input').value='';document.getElementById('p4-err').textContent='';['p4-mode','p4-wait','p4-join','p4-game'].forEach(s=>{document.getElementById(s).style.display=s==='p4-join'?'flex':'none';});}
+function p4ShowGame(){['p4-mode','p4-wait','p4-join','p4-game'].forEach(s=>{document.getElementById(s).style.display=s==='p4-game'?'flex':'none';});}
+function p4ShowWait(){['p4-mode','p4-wait','p4-join','p4-game'].forEach(s=>{document.getElementById(s).style.display=s==='p4-wait'?'flex':'none';});}
+
+function p4BackToHub(){
+  if(p4ref){p4ref.off();p4ref=null;}
+  p4listening=false;p4ClearSession();p4board=[];p4local=false;
+  closeGame('p4');p4ShowMode();
 }
 
-// ============================================================
-//  PUISSANCE 4
-// ============================================================
-let p4me = 0, p4code = '', p4ref = null, p4listening = false;
-let p4board = [], p4turn = 1, p4status = '';
-
-function p4ShowSection(id) {
-  ['p4-home','p4-wait','p4-join','p4-game'].forEach(s => {
-    document.getElementById(s).style.display = s === id ? (id === 'p4-game' ? 'flex' : 'flex') : 'none';
-  });
+function p4StartLocal(){
+  p4local=true;p4me=0;p4board=p4EmptyBoard();p4turn=1;p4status='playing';
+  p4BuildBoard();p4RenderBoard();p4UpdateTurn();p4ShowGame();
 }
-function p4BackHome() { p4ShowSection('p4-home'); }
-function p4ShowJoin() { document.getElementById('p4-input').value=''; document.getElementById('p4-err').textContent=''; p4ShowSection('p4-join'); }
 
-async function p4Create() {
-  p4code = p4RandCode(); p4me = 1;
-  p4SaveSession();
-  p4board = p4EmptyBoard();
-  await db.ref('games/'+p4code).set({ board: JSON.stringify(p4board), turn:1, status:'waiting', winner:0, ts:Date.now() });
-  document.getElementById('p4-code').textContent = p4code;
-  p4ShowSection('p4-wait');
-  p4ref = db.ref('games/'+p4code);
-  p4ref.on('value', snap => {
-    if (!snap.exists()) return;
-    const d = snap.val();
-    if (d.status === 'playing' && document.getElementById('p4-wait').style.display !== 'none') {
-      p4ApplyState(d); p4EnterGame();
-    }
+async function p4Create(){
+  p4local=false;p4code=randCode();p4me=1;p4SaveSession();
+  p4board=p4EmptyBoard();
+  await db.ref('games/'+p4code).set({board:JSON.stringify(p4board),turn:1,status:'waiting',winner:0,ts:Date.now()});
+  document.getElementById('p4-code').textContent=p4code;
+  p4ShowWait();
+  p4ref=db.ref('games/'+p4code);
+  p4ref.on('value',snap=>{
+    if(!snap.exists()) return;
+    const d=snap.val();
+    if(d.status==='playing'&&document.getElementById('p4-wait').style.display!=='none'){p4ApplyState(d);p4EnterRemote();}
   });
 }
 
-function p4Share() {
-  const txt = 'Rejoins ma partie de Puissance 4 sur Duo by Sovnge ! Code : ' + p4code;
-  if (navigator.share) navigator.share({ text: txt });
-  else if (navigator.clipboard) navigator.clipboard.writeText(txt);
+function p4Share(){const t='Code Puissance 4 : '+p4code;if(navigator.share)navigator.share({text:t});else if(navigator.clipboard)navigator.clipboard.writeText(t);}
+
+function p4Cancel(){p4ClearSession();if(p4ref){p4ref.off();p4ref.remove();p4ref=null;}p4ShowMode();}
+
+async function p4Join(){
+  const val=document.getElementById('p4-input').value.trim().toUpperCase();
+  document.getElementById('p4-err').textContent='';
+  if(val.length!==4){document.getElementById('p4-err').textContent='Code à 4 lettres requis';return;}
+  let snap;try{snap=await db.ref('games/'+val).get();}catch{document.getElementById('p4-err').textContent='Erreur réseau';return;}
+  if(!snap.exists()){document.getElementById('p4-err').textContent='Partie introuvable';return;}
+  const d=snap.val();if(d.status!=='waiting'){document.getElementById('p4-err').textContent='Partie déjà lancée';return;}
+  p4local=false;p4code=val;p4me=2;p4SaveSession();
+  p4ref=db.ref('games/'+p4code);
+  await p4ref.update({status:'playing'});
+  p4ApplyState((await p4ref.get()).val());p4EnterRemote();
 }
 
-function p4Cancel() {
-  p4ClearSession();
-  if (p4ref) { p4ref.off(); p4ref.remove(); p4ref = null; }
-  p4BackHome();
-}
-
-async function p4Join() {
-  const val = document.getElementById('p4-input').value.trim().toUpperCase();
-  document.getElementById('p4-err').textContent = '';
-  if (val.length !== 4) { document.getElementById('p4-err').textContent = 'Code à 4 lettres requis'; return; }
-  let snap;
-  try { snap = await db.ref('games/'+val).get(); } catch { document.getElementById('p4-err').textContent = 'Erreur de connexion'; return; }
-  if (!snap.exists()) { document.getElementById('p4-err').textContent = 'Partie introuvable'; return; }
-  const d = snap.val();
-  if (d.status !== 'waiting') { document.getElementById('p4-err').textContent = 'Partie déjà en cours'; return; }
-  p4code = val; p4me = 2; p4SaveSession();
-  p4ref = db.ref('games/'+p4code);
-  await p4ref.update({ status:'playing' });
-  const s2 = await p4ref.get();
-  p4ApplyState(s2.val()); p4EnterGame();
-}
-
-function p4EnterGame() {
-  p4BuildBoard(); p4RenderBoard(); p4UpdateStatus();
-  p4ShowSection('p4-game');
-  if (!p4listening && p4ref) {
-    p4listening = true;
-    p4ref.on('value', snap => {
-      if (!snap.exists()) return;
-      const d = snap.val();
-      p4ApplyState(d); p4RenderBoard(); p4UpdateStatus();
-      if (p4status === 'finished') p4ShowResult(d.winner);
-    });
+function p4EnterRemote(){
+  p4BuildBoard();p4RenderBoard();p4UpdateTurn();p4ShowGame();
+  if(!p4listening&&p4ref){
+    p4listening=true;
+    p4ref.on('value',snap=>{if(!snap.exists())return;const d=snap.val();p4ApplyState(d);p4RenderBoard();p4UpdateTurn();if(p4status==='finished')p4ShowResult(d.winner);});
   }
 }
 
-function p4BuildBoard() {
-  const el = document.getElementById('p4-board');
-  el.innerHTML = '';
-  for (let r=0;r<6;r++) for (let c=0;c<7;c++) {
-    const div = document.createElement('div');
-    div.className='cell'; div.dataset.r=r; div.dataset.c=c;
-    el.appendChild(div);
+function p4UpdateTurn(){
+  document.getElementById('p4-disc').style.background=p4turn===1?'#ED254E':'#F3DE8A';
+  if(p4local){
+    document.getElementById('p4-turn-txt').textContent='Joueur '+p4turn;
+    document.getElementById('p4-hint').textContent='↓ Touchez une colonne';
+  } else {
+    const mine=p4turn===p4me&&p4status==='playing';
+    document.getElementById('p4-turn-txt').textContent=mine?'Votre tour':"Tour de l'adversaire";
+    document.getElementById('p4-hint').textContent=mine?'↓ Touchez une colonne':'';
   }
-  el.onclick = e => { const cell=e.target.closest('.cell'); if(cell) p4PlayCol(+cell.dataset.c); };
 }
 
-function p4RenderBoard() {
-  document.querySelectorAll('#p4-board .cell').forEach(cell => {
-    const v = p4board[+cell.dataset.r][+cell.dataset.c];
-    const n = 'cell'+(v===1?' p1':v===2?' p2':'');
-    if (cell.className !== n) cell.className = n;
+function p4BuildBoard(){
+  const el=document.getElementById('p4-board');el.innerHTML='';
+  for(let r=0;r<6;r++)for(let c=0;c<7;c++){const d=document.createElement('div');d.className='cell';d.dataset.r=r;d.dataset.c=c;el.appendChild(d);}
+  el.onclick=e=>{const cell=e.target.closest('.cell');if(cell)p4PlayCol(+cell.dataset.c);};
+}
+
+function p4RenderBoard(){
+  document.querySelectorAll('#p4-board .cell').forEach(cell=>{
+    const v=p4board[+cell.dataset.r][+cell.dataset.c];
+    const n='cell'+(v===1?' p1':v===2?' p2':'');if(cell.className!==n)cell.className=n;
   });
 }
 
-function p4UpdateStatus() {
-  const myTurn = p4turn === p4me && p4status === 'playing';
-  document.getElementById('p4-disc').style.background = p4turn===1 ? '#ED254E':'#F3DE8A';
-  document.getElementById('p4-turn-txt').textContent = myTurn ? 'Votre tour' : "Tour de l'adversaire";
-  document.getElementById('p4-hint').textContent = myTurn ? '↓ Touchez une colonne' : '';
+async function p4PlayCol(col){
+  if(p4status!=='playing') return;
+  if(!p4local&&p4turn!==p4me) return;
+  let row=-1;for(let r=5;r>=0;r--){if(p4board[r][col]===0){row=r;break;}}
+  if(row===-1) return;
+  const next=p4board.map(r=>[...r]);
+  const player=p4local?p4turn:p4me;
+  next[row][col]=player;
+  const win=p4CheckWin(next,row,col,player)?player:0;
+  const draw=!win&&next[0].every(c=>c!==0);
+  const ns=win||draw?'finished':'playing';
+  const nt=player===1?2:1;
+  if(p4local){
+    p4board=next;p4turn=nt;p4status=ns;p4RenderBoard();
+    if(ns==='finished')p4ShowResult(win);else p4UpdateTurn();
+  } else {
+    await p4ref.update({board:JSON.stringify(next),turn:nt,status:ns,winner:win});
+  }
 }
 
-async function p4PlayCol(col) {
-  if (p4turn !== p4me || p4status !== 'playing') return;
-  let row=-1;
-  for (let r=5;r>=0;r--) { if (p4board[r][col]===0){row=r;break;} }
-  if (row===-1) return;
-  const next = p4board.map(r=>[...r]);
-  next[row][col] = p4me;
-  const winner = p4CheckWin(next,row,col,p4me) ? p4me : 0;
-  const draw = !winner && next[0].every(c=>c!==0);
-  await p4ref.update({ board:JSON.stringify(next), turn:p4me===1?2:1, status:(winner||draw)?'finished':'playing', winner });
-}
-
-function p4CheckWin(b,row,col,p) {
-  for (const [dr,dc] of [[0,1],[1,0],[1,1],[1,-1]]) {
+function p4CheckWin(b,row,col,p){
+  for(const [dr,dc] of [[0,1],[1,0],[1,1],[1,-1]]){
     let n=1;
     for(let i=1;i<=3;i++){const r=row+dr*i,c=col+dc*i;if(r>=0&&r<6&&c>=0&&c<7&&b[r][c]===p)n++;else break;}
     for(let i=1;i<=3;i++){const r=row-dr*i,c=col-dc*i;if(r>=0&&r<6&&c>=0&&c<7&&b[r][c]===p)n++;else break;}
-    if(n>=4) return true;
+    if(n>=4)return true;
   }
   return false;
 }
 
-function p4ShowResult(winner) {
-  if (winner>0) {
+function p4ShowResult(winner){
+  if(winner>0){
     const cls='win'+(winner===1?'1':'2');
     const cells=document.querySelectorAll('#p4-board .cell');
-    for(let r=0;r<6;r++) for(let c=0;c<7;c++) {
-      if(p4board[r][c]!==winner) continue;
-      for(const [dr,dc] of [[0,1],[1,0],[1,1],[1,-1]]) {
+    for(let r=0;r<6;r++)for(let c=0;c<7;c++){
+      if(p4board[r][c]!==winner)continue;
+      for(const [dr,dc] of [[0,1],[1,0],[1,1],[1,-1]]){
         const g=[[r,c]];
         for(let i=1;i<=3;i++){const rr=r+dr*i,cc=c+dc*i;if(rr>=0&&rr<6&&cc>=0&&cc<7&&p4board[rr][cc]===winner)g.push([rr,cc]);else break;}
-        if(g.length>=4) g.forEach(([rr,cc])=>cells[rr*7+cc].classList.add(cls));
+        if(g.length>=4)g.forEach(([rr,cc])=>cells[rr*7+cc].classList.add(cls));
       }
     }
   }
-  const col = winner===1?'Raspberry':winner===2?'Or':'';
-  document.getElementById('p4-win-lbl').textContent = winner ? col+' gagne' : 'Match nul';
-  document.getElementById('p4-win-msg').textContent = winner===p4me?'Bravo !':winner===0?'Égalité':'Dommage…';
+  const name=p4local?'Joueur '+winner:winner===1?'Raspberry':winner===2?'Or':null;
+  document.getElementById('p4-win-lbl').textContent=winner?(name+' gagne'):'Match nul';
+  document.getElementById('p4-win-msg').textContent=winner===0?'Égalité !':(p4local||winner===p4me)?'Bravo !':'Dommage…';
   document.getElementById('p4-win').classList.add('on');
 }
 
-async function p4Rematch() {
+async function p4Rematch(){
   document.getElementById('p4-win').classList.remove('on');
-  p4board = p4EmptyBoard();
-  await p4ref.update({ board:JSON.stringify(p4board), turn:1, status:'playing', winner:0 });
+  p4board=p4EmptyBoard();p4turn=1;p4status='playing';p4RenderBoard();
+  if(p4local)p4UpdateTurn();
+  else await p4ref.update({board:JSON.stringify(p4board),turn:1,status:'playing',winner:0});
 }
 
-function p4Quit() {
+function p4Quit(){
   document.getElementById('p4-win').classList.remove('on');
-  p4listening=false; if(p4ref){p4ref.off();p4ref=null;}
-  p4ClearSession(); p4board=[];
-  p4BackHome();
+  p4listening=false;if(p4ref){p4ref.off();p4ref=null;}
+  p4ClearSession();p4board=[];p4local=false;p4ShowMode();
 }
 
 function p4ApplyState(d){p4board=JSON.parse(d.board);p4turn=d.turn;p4status=d.status;}
 function p4EmptyBoard(){return Array.from({length:6},()=>Array(7).fill(0));}
-function p4RandCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ';return Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join('');}
 function p4SaveSession(){try{localStorage.setItem('duo_p4_code',p4code);localStorage.setItem('duo_p4_me',p4me);}catch{}}
 function p4ClearSession(){try{localStorage.removeItem('duo_p4_code');localStorage.removeItem('duo_p4_me');}catch{}}
 
 window.addEventListener('load',()=>{
   try{
-    const c=localStorage.getItem('duo_p4_code');
-    const m=parseInt(localStorage.getItem('duo_p4_me')||'0');
-    if(!c||!m) return;
+    const c=localStorage.getItem('duo_p4_code'),m=+localStorage.getItem('duo_p4_me');
+    if(!c||!m)return;
     db.ref('games/'+c).get().then(snap=>{
       if(!snap.exists()||snap.val().status==='finished'){p4ClearSession();return;}
-      p4code=c;p4me=m;p4ref=db.ref('games/'+p4code);
-      p4ApplyState(snap.val());
-      openGame('p4'); p4EnterGame();
+      p4code=c;p4me=m;p4local=false;p4ref=db.ref('games/'+p4code);
+      p4ApplyState(snap.val());openGame('p4');p4EnterRemote();
     }).catch(()=>p4ClearSession());
   }catch{}
 });
 
-// ============================================================
-//  VÉRITÉ OU DÉFI
-// ============================================================
-const VOD_CARDS = [
-  {t:'v',q:'Quelle est ta plus grande peur ?'},
-  {t:'d',q:'Fais un bisou dans le cou à l\'autre joueur'},
-  {t:'v',q:'Qu\'est-ce que tu changerais chez moi ?'},
-  {t:'d',q:'Chante les premières paroles d\'une chanson'},
-  {t:'v',q:'Quel est ton souvenir le plus embarrassant ?'},
-  {t:'d',q:'Imite quelqu\'un qu\'on connaît tous les deux'},
-  {t:'v',q:'Qu\'est-ce que tu n\'as jamais osé me dire ?'},
-  {t:'d',q:'Dis 3 choses que tu aimes chez moi'},
-  {t:'v',q:'Quel est ton plus grand rêve ?'},
-  {t:'d',q:'Montre la dernière photo de ta galerie'},
-  {t:'v',q:'Si tu pouvais revivre un moment avec moi, lequel ?'},
-  {t:'d',q:'Danse pendant 30 secondes sans musique'},
-  {t:'v',q:'Quelle chanson te fait penser à nous ?'},
-  {t:'d',q:'Lis tes 3 derniers messages reçus à voix haute'},
-  {t:'v',q:'Qu\'est-ce que tu admires le plus chez moi ?'},
-  {t:'d',q:'Appelle un ami et dis-lui "je t\'aime" sans explication'},
-  {t:'v',q:'Quel est ton rêve de voyage idéal ?'},
-  {t:'d',q:'Fais le bruit d\'un animal au choix'},
-  {t:'v',q:'Tu penses à quoi juste avant de t\'endormir ?'},
-  {t:'d',q:'Fais un compliment sincère à l\'autre joueur'},
-  {t:'v',q:'Quelle est ta pire qualité ?'},
-  {t:'d',q:'Envoie un message gênant à un ami'},
-  {t:'v',q:'Si on partait demain, où voudrais-tu aller ?'},
-  {t:'d',q:'Dis le prénom de ton premier crush'},
-  {t:'v',q:'Qu\'est-ce qui te rend heureux·se le plus facilement ?'},
-  {t:'d',q:'Poste une story embarrassante'},
-  {t:'v',q:'Quelle est la chose la plus folle que tu aies faite ?'},
-  {t:'d',q:'Échange ton téléphone pendant 2 minutes'},
-  {t:'v',q:'Quel cadeau idéal j\'aurais pu t\'offrir ?'},
-  {t:'d',q:'Fais 10 pompes'},
+// ─── VÉRITÉ OU DÉFI ─────────────────────────────────────────
+const VOD=[
+  {t:'v',q:'Quelle est ta plus grande peur ?'},{t:'d',q:"Fais un bisou dans le cou à l'autre joueur"},
+  {t:'v',q:"Qu'est-ce que tu changerais chez moi ?"},{t:'d',q:"Chante les premières paroles d'une chanson"},
+  {t:'v',q:'Quel est ton souvenir le plus embarrassant ?'},{t:'d',q:"Imite quelqu'un qu'on connaît tous les deux"},
+  {t:'v',q:"Qu'est-ce que tu n'as jamais osé me dire ?"},{t:'d',q:'Dis 3 choses que tu aimes chez moi'},
+  {t:'v',q:'Quel est ton plus grand rêve ?'},{t:'d',q:'Montre la dernière photo de ta galerie'},
+  {t:'v',q:'Si tu pouvais revivre un moment avec moi, lequel ?'},{t:'d',q:'Danse 30 secondes sans musique'},
+  {t:'v',q:'Quelle chanson te fait penser à nous ?'},{t:'d',q:'Lis tes 3 derniers messages reçus à voix haute'},
+  {t:'v',q:"Qu'est-ce que tu admires le plus chez moi ?"},{t:'d',q:"Appelle un ami et dis-lui 'je t'aime' sans explication"},
+  {t:'v',q:'Quel est ton rêve de voyage idéal ?'},{t:'d',q:"Fais le bruit d'un animal"},
+  {t:'v',q:'Tu penses à quoi juste avant de t\'endormir ?'},{t:'d',q:"Fais un compliment sincère à l'autre joueur"},
+  {t:'v',q:'Quelle est ta pire qualité ?'},{t:'d',q:'Envoie un message gênant à un ami'},
+  {t:'v',q:'Si on partait demain, où voudrais-tu aller ?'},{t:'d',q:'Dis le prénom de ton premier crush'},
+  {t:'v',q:"Qu'est-ce qui te rend heureux·se le plus facilement ?"},{t:'d',q:'Poste une story embarrassante'},
+  {t:'v',q:'Quelle est la chose la plus folle que tu aies faite ?'},{t:'d',q:'Échange ton téléphone pendant 2 minutes'},
+  {t:'v',q:"Quel cadeau idéal j'aurais pu t'offrir ?"},{t:'d',q:'Fais 10 pompes'},
 ];
+let vodDeck=[],vodIdx=0,vodPlayer=1;
+function vodStart(){vodDeck=[...VOD].sort(()=>Math.random()-.5);vodIdx=0;vodPlayer=1;vodShow();document.getElementById('vod-home').style.display='none';document.getElementById('vod-game').style.display='flex';}
+function vodShow(){const c=vodDeck[vodIdx%VOD.length],v=c.t==='v';document.getElementById('vod-badge').textContent=v?'Vérité':'Défi';document.getElementById('vod-badge').className='vod-badge '+(v?'vod-v':'vod-d');document.getElementById('vod-text').textContent=c.q;document.getElementById('vod-counter').textContent=(vodIdx%VOD.length+1)+' / '+VOD.length;const p=vodPlayer===1;document.getElementById('vod-pdot').textContent='J'+vodPlayer;document.getElementById('vod-pdot').style.background=p?'var(--raspberry)':'var(--gold)';document.getElementById('vod-pdot').style.color=p?'#fff':'#000';document.getElementById('vod-pname').textContent='Joueur '+vodPlayer;}
+function vodNext(){vodIdx++;vodPlayer=vodPlayer===1?2:1;vodShow();}
+function vodReset(){vodDeck=[];vodIdx=0;vodPlayer=1;}
 
-let vodDeck=[], vodIdx=0, vodPlayer=1;
+// ─── ROUE ────────────────────────────────────────────────────
+const ROUE=[{label:'Film surprise',e:'🎬'},{label:'Cuisine ensemble',e:'🍳'},{label:'Promenade nocturne',e:'🌙'},{label:'Jeu de société',e:'🎲'},{label:'Moment massage',e:'💆'},{label:'Pique-nique',e:'🧺'},{label:'Karaoké maison',e:'🎤'},{label:'Séance photo',e:'📸'},{label:'Apéro créatif',e:'🍷'},{label:'Lecture à voix haute',e:'📖'}];
+const RC=['#ED254E','#557A86','#634B66','#c44763','#2a5469','#8B6B8E','#3d6b78','#4a3550','#7a9aa3','#9b7a9e'];
+let roueAngle=0,roueSpinning=false;
+function roueInit(){roueDraw(document.getElementById('wheel-canvas'),roueAngle);}
+function roueDraw(cv,a){const ctx=cv.getContext('2d'),cx=cv.width/2,cy=cv.height/2,r=cx-4,n=ROUE.length,sl=(2*Math.PI)/n;ctx.clearRect(0,0,cv.width,cv.height);ROUE.forEach((item,i)=>{const s=a+i*sl,en=s+sl;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,s,en);ctx.fillStyle=RC[i];ctx.fill();ctx.save();ctx.translate(cx,cy);ctx.rotate(s+sl/2);ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.9)';ctx.font='bold 12px Plus Jakarta Sans,sans-serif';ctx.fillText(item.e+' '+item.label,r-10,4);ctx.restore();});ctx.beginPath();ctx.arc(cx,cy,22,0,Math.PI*2);ctx.fillStyle='#0D1620';ctx.fill();}
+function roueSpin(){if(roueSpinning)return;roueSpinning=true;document.getElementById('roue-result').style.display='none';document.getElementById('roue-btn').disabled=true;const cv=document.getElementById('wheel-canvas'),tot=(Math.PI*2*5)+Math.random()*Math.PI*2,dur=3500,t0=performance.now(),a0=roueAngle;function f(now){const t=Math.min((now-t0)/dur,1),ease=1-Math.pow(1-t,4);roueAngle=a0+tot*ease;roueDraw(cv,roueAngle);if(t<1){requestAnimationFrame(f);return;}roueSpinning=false;document.getElementById('roue-btn').disabled=false;const n=ROUE.length,sl=(2*Math.PI)/n,ptr=(-roueAngle%(Math.PI*2)+Math.PI*2+Math.PI*1.5)%(Math.PI*2),idx=Math.floor(ptr/sl)%n,item=ROUE[idx],el=document.getElementById('roue-result');el.textContent=item.e+' '+item.label;el.style.display='block';}requestAnimationFrame(f);}
 
-function vodStart() {
-  vodDeck = [...VOD_CARDS].sort(()=>Math.random()-.5);
-  vodIdx=0; vodPlayer=1;
-  vodShowCard();
-  document.getElementById('vod-home').style.display='none';
-  document.getElementById('vod-game').style.display='flex';
+// ─── QUI ME CONNAÎT — LOCAL ──────────────────────────────────
+const QMCQ=['Quelle est ma couleur préférée ?','Quel est mon plat préféré ?','Quel est mon plus grand rêve ?','Quel film je peux regarder en boucle ?','Quelle est ma plus grande peur ?','Quel est mon endroit préféré au monde ?','Quelle serait ma super-puissance idéale ?',"Qu'est-ce que je fais en premier le matin ?",'Quelle est ma chanson préférée en ce moment ?','Quel est mon défaut principal ?'];
+let qmclPhase=1,qmclIdx=0,qmclScores=[0,0],qmclWaiting=false;
+
+const QMC_ALL=['qmc-mode','qmc-wait','qmc-join','qmc-local','qmc-remote'];
+function qmcShowMode(){QMC_ALL.forEach(s=>{document.getElementById(s).style.display=s==='qmc-mode'?'flex':'none';});}
+function qmcShowJoin(){document.getElementById('qmc-input').value='';document.getElementById('qmc-err').textContent='';QMC_ALL.forEach(s=>{document.getElementById(s).style.display=s==='qmc-join'?'flex':'none';});}
+function qmcBackToHub(){qmcrQuit();closeGame('qmc');qmcShowMode();}
+
+function qmcStartLocal(){
+  qmclPhase=1;qmclIdx=0;qmclScores=[0,0];qmclWaiting=false;
+  qmclUpdateUI();
+  QMC_ALL.forEach(s=>{document.getElementById(s).style.display=s==='qmc-local'?'flex':'none';});
+  document.getElementById('qmcl-scores').style.display='flex';
 }
 
-function vodShowCard() {
-  const card = vodDeck[vodIdx % vodDeck.length];
-  const isV = card.t==='v';
-  document.getElementById('vod-badge').textContent = isV ? 'Vérité' : 'Défi';
-  document.getElementById('vod-badge').className = 'vod-type-badge '+(isV?'vod-type-v':'vod-type-d');
-  document.getElementById('vod-text').textContent = card.q;
-  document.getElementById('vod-counter').textContent = (vodIdx%VOD_CARDS.length+1)+' / '+VOD_CARDS.length;
-  const p = vodPlayer===1;
-  document.getElementById('vod-pdot').textContent = 'J'+(vodPlayer);
-  document.getElementById('vod-pdot').style.background = p ? 'var(--raspberry)' : 'var(--gold)';
-  document.getElementById('vod-pdot').style.color = p ? '#fff' : '#000';
-  document.getElementById('vod-pname').textContent = 'Joueur '+vodPlayer;
+function qmclUpdateUI(){
+  const sub=qmclPhase===1?'Joueur 1':'Joueur 2',gue=qmclPhase===1?'Joueur 2':'Joueur 1';
+  document.getElementById('qmcl-phase').textContent='Phase '+qmclPhase+' · Sur '+sub;
+  document.getElementById('qmcl-q').textContent=QMCQ[qmclIdx];
+  document.getElementById('qmcl-who').textContent=gue+', quelle est votre réponse ?';
+  document.getElementById('qmcl-ans').value='';document.getElementById('qmcl-ans').style.display='block';
+  document.getElementById('qmcl-compare').style.display='none';
+  document.getElementById('qmcl-real').value='';
+  document.getElementById('qmcl-a-who1').textContent=gue+' a répondu';
+  document.getElementById('qmcl-a-who2').textContent='Vraie réponse de '+sub+' :';
+  document.getElementById('qmcl-s1').textContent=qmclScores[0];
+  document.getElementById('qmcl-s2').textContent=qmclScores[1];
+  document.getElementById('qmcl-btn').textContent='Valider ma réponse';
+  document.getElementById('qmcl-btn').onclick=qmclAction;
+  document.getElementById('qmc-top-score').textContent=(qmclIdx+1+(qmclPhase===2?QMCQ.length:0))+' / '+(QMCQ.length*2);
+  qmclWaiting=false;
 }
 
-function vodNext() {
-  vodIdx++;
-  vodPlayer = vodPlayer===1?2:1;
-  vodShowCard();
-}
-
-function vodReset() { vodDeck=[]; vodIdx=0; vodPlayer=1; }
-
-// ============================================================
-//  ROUE DES ACTIVITÉS
-// ============================================================
-const ROUE_ITEMS = [
-  {label:'Film surprise',    emoji:'🎬'},
-  {label:'Cuisine ensemble', emoji:'🍳'},
-  {label:'Promenade nocturne',emoji:'🌙'},
-  {label:'Jeu de société',   emoji:'🎲'},
-  {label:'Moment massage',   emoji:'💆'},
-  {label:'Pique-nique',      emoji:'🧺'},
-  {label:'Karaoké maison',   emoji:'🎤'},
-  {label:'Séance photo',     emoji:'📸'},
-  {label:'Apéro créatif',    emoji:'🍷'},
-  {label:'Lecture à voix haute',emoji:'📖'},
-];
-const ROUE_COLORS=['#ED254E','#557A86','#634B66','#c44763','#2a5469','#8B6B8E','#3d6b78','#4a3550','#7a9aa3','#9b7a9e'];
-
-let roueAngle=0, roueSpinning=false;
-
-function roueInit() {
-  const canvas = document.getElementById('wheel-canvas');
-  roueDraw(canvas, roueAngle);
-}
-
-function roueDraw(canvas, angle) {
-  const ctx = canvas.getContext('2d');
-  const cx = canvas.width/2, cy = canvas.height/2, r = cx-4;
-  const n = ROUE_ITEMS.length, slice = (2*Math.PI)/n;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ROUE_ITEMS.forEach((item,i) => {
-    const start = angle + i*slice, end = start+slice;
-    ctx.beginPath(); ctx.moveTo(cx,cy);
-    ctx.arc(cx,cy,r,start,end);
-    ctx.fillStyle = ROUE_COLORS[i]; ctx.fill();
-    ctx.save(); ctx.translate(cx,cy); ctx.rotate(start+slice/2);
-    ctx.textAlign='right'; ctx.fillStyle='rgba(255,255,255,0.9)';
-    ctx.font='bold 12px Plus Jakarta Sans,sans-serif';
-    ctx.fillText(item.emoji+' '+item.label, r-10, 4);
-    ctx.restore();
-  });
-  ctx.beginPath(); ctx.arc(cx,cy,22,0,Math.PI*2);
-  ctx.fillStyle='#0D1620'; ctx.fill();
-  ctx.beginPath(); ctx.arc(cx,cy,14,0,Math.PI*2);
-  ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.fill();
-}
-
-function roueSpin() {
-  if (roueSpinning) return;
-  roueSpinning = true;
-  document.getElementById('roue-result').style.display='none';
-  document.getElementById('roue-btn').disabled=true;
-  const canvas = document.getElementById('wheel-canvas');
-  const totalRot = (Math.PI*2*5) + Math.random()*Math.PI*2;
-  const duration = 3500, start = performance.now();
-  const startAngle = roueAngle;
-  function frame(now) {
-    const t = Math.min((now-start)/duration, 1);
-    const ease = 1 - Math.pow(1-t,4);
-    roueAngle = startAngle + totalRot*ease;
-    roueDraw(canvas, roueAngle);
-    if (t < 1) { requestAnimationFrame(frame); return; }
-    roueSpinning=false;
-    document.getElementById('roue-btn').disabled=false;
-    const n=ROUE_ITEMS.length, slice=(2*Math.PI)/n;
-    const ptr = (-roueAngle % (Math.PI*2) + Math.PI*2 + Math.PI*1.5) % (Math.PI*2);
-    const idx = Math.floor(ptr/slice) % n;
-    const item = ROUE_ITEMS[idx];
-    const el = document.getElementById('roue-result');
-    el.textContent = item.emoji+' '+item.label;
-    el.style.display='block';
-  }
-  requestAnimationFrame(frame);
-}
-
-// ============================================================
-//  QUI ME CONNAIT ?
-// ============================================================
-const QMC_QUESTIONS = [
-  'Quelle est ma couleur préférée ?',
-  'Quel est mon plat préféré ?',
-  'Quel est mon plus grand rêve ?',
-  'Quel film je peux regarder en boucle ?',
-  'Quelle est ma plus grande peur ?',
-  'Quel est mon endroit préféré au monde ?',
-  'Quelle serait ma super-puissance idéale ?',
-  "Qu'est-ce que je fais en premier le matin ?",
-  'Quelle est ma chanson préférée en ce moment ?',
-  "Quel est mon défaut principal ?",
-];
-
-let qmcPhase=1, qmcQIdx=0, qmcScores=[0,0], qmcWaiting=false;
-
-function qmcStart() {
-  qmcPhase=1; qmcQIdx=0; qmcScores=[0,0]; qmcWaiting=false;
-  qmcUpdateUI();
-  document.getElementById('qmc-home').style.display='none';
-  document.getElementById('qmc-game').style.display='flex';
-  document.getElementById('qmc-scores').style.display='flex';
-}
-
-function qmcUpdateUI() {
-  const subject = qmcPhase===1 ? 'Joueur 1' : 'Joueur 2';
-  const guesser = qmcPhase===1 ? 'Joueur 2' : 'Joueur 1';
-  document.getElementById('qmc-phase').textContent = 'Phase '+qmcPhase+' · Questions sur '+subject;
-  document.getElementById('qmc-q').textContent = QMC_QUESTIONS[qmcQIdx];
-  document.getElementById('qmc-who').textContent = guesser+', quelle est votre réponse ?';
-  document.getElementById('qmc-ans').value='';
-  document.getElementById('qmc-ans').style.display='block';
-  document.getElementById('qmc-compare').style.display='none';
-  document.getElementById('qmc-a-val2').textContent='';
-  document.getElementById('qmc-real').value='';
-  document.getElementById('qmc-a-who1').textContent=guesser+' a répondu';
-  document.getElementById('qmc-a-who2').textContent='Vraie réponse de '+subject+' :';
-  document.getElementById('qmc-btn').textContent='Valider ma réponse';
-  document.getElementById('qmc-score-top').textContent=(qmcQIdx+1)+(qmcPhase===2?'+'+QMC_QUESTIONS.length:'')+' / '+(QMC_QUESTIONS.length*2);
-  document.getElementById('qmc-s1').textContent=qmcScores[0];
-  document.getElementById('qmc-s2').textContent=qmcScores[1];
-  qmcWaiting=false;
-}
-
-function qmcAction() {
-  if (!qmcWaiting) {
-    // Étape 1 : valider la réponse du devineur
-    const ans = document.getElementById('qmc-ans').value.trim();
-    if (!ans) return;
-    document.getElementById('qmc-a-val1').textContent = ans;
-    document.getElementById('qmc-ans').style.display='none';
-    document.getElementById('qmc-compare').style.display='flex';
-    document.getElementById('qmc-btn').textContent='Question suivante →';
-    qmcWaiting=true;
+function qmclAction(){
+  if(!qmclWaiting){
+    const a=document.getElementById('qmcl-ans').value.trim();if(!a)return;
+    document.getElementById('qmcl-a-val1').textContent=a;
+    document.getElementById('qmcl-ans').style.display='none';
+    document.getElementById('qmcl-compare').style.display='flex';
+    document.getElementById('qmcl-btn').textContent='Question suivante →';
+    qmclWaiting=true;
   } else {
-    // Étape 2 : next question
-    qmcQIdx++;
-    if (qmcQIdx >= QMC_QUESTIONS.length) {
-      if (qmcPhase===1) { qmcPhase=2; qmcQIdx=0; qmcUpdateUI(); }
-      else qmcEnd();
-    } else {
-      qmcUpdateUI();
-    }
+    qmclIdx++;
+    if(qmclIdx>=QMCQ.length){if(qmclPhase===1){qmclPhase=2;qmclIdx=0;qmclUpdateUI();}else qmclEnd();}
+    else qmclUpdateUI();
   }
 }
 
-function qmcScore(correct) {
-  if (correct) { qmcScores[qmcPhase-1]++; }
-  document.getElementById('qmc-s1').textContent=qmcScores[0];
-  document.getElementById('qmc-s2').textContent=qmcScores[1];
+function qmclScore(ok){if(ok)qmclScores[qmclPhase-1]++;document.getElementById('qmcl-s1').textContent=qmclScores[0];document.getElementById('qmcl-s2').textContent=qmclScores[1];}
+
+function qmclEnd(){
+  const [s1,s2]=qmclScores;
+  document.getElementById('qmcl-q').textContent=s1>s2?'🎉 Joueur 1 connaît mieux !':s2>s1?'🎉 Joueur 2 connaît mieux !':'Égalité parfaite !';
+  document.getElementById('qmcl-who').textContent='J1='+s1+' pts · J2='+s2+' pts';
+  document.getElementById('qmcl-ans').style.display='none';
+  document.getElementById('qmcl-compare').style.display='none';
+  document.getElementById('qmcl-btn').textContent='Rejouer';
+  document.getElementById('qmcl-btn').onclick=qmcStartLocal;
 }
 
-function qmcEnd() {
-  const [s1,s2]=qmcScores;
-  let msg='';
-  if (s1>s2) msg='🎉 Joueur 1 connaît mieux l\'autre !';
-  else if (s2>s1) msg='🎉 Joueur 2 connaît mieux l\'autre !';
-  else msg='Égalité parfaite !';
-  document.getElementById('qmc-q').textContent=msg;
-  document.getElementById('qmc-who').textContent='Scores : J1='+s1+' pts · J2='+s2+' pts';
-  document.getElementById('qmc-ans').style.display='none';
-  document.getElementById('qmc-compare').style.display='none';
-  document.getElementById('qmc-btn').textContent='Rejouer';
-  document.getElementById('qmc-btn').onclick=()=>{qmcStart();};
+// ─── QUI ME CONNAÎT — REMOTE ─────────────────────────────────
+// Firebase: qmc/{CODE} → { status, phase, qIdx, step, subjectAnswer, guesserGuess, scores, ts }
+// step: 'subject_answer' | 'guesser_guess' | 'judge'
+let qmcrCode='', qmcrMe=0, qmcrRef=null, qmcrListening=false;
+
+function qmcrShowSection(id){['qmcr-waiting','qmcr-active','qmcr-reveal'].forEach(s=>{document.getElementById(s).style.display=s===id?'flex':'none';});}
+
+async function qmcCreateRemote(){
+  qmcrCode=randCode();qmcrMe=1;qmcrSaveSession();
+  await db.ref('qmc/'+qmcrCode).set({status:'waiting',phase:1,qIdx:0,step:'subject_answer',subjectAnswer:'',guesserGuess:'',scores:'0,0',ts:Date.now()});
+  document.getElementById('qmc-code-box').textContent=qmcrCode;
+  QMC_ALL.forEach(s=>{document.getElementById(s).style.display=s==='qmc-wait'?'flex':'none';});
+  qmcrRef=db.ref('qmc/'+qmcrCode);
+  qmcrRef.on('value',snap=>{
+    if(!snap.exists())return;
+    const d=snap.val();
+    if(d.status==='playing'&&document.getElementById('qmc-wait').style.display!=='none')qmcrEnterGame(d);
+  });
 }
 
-function qmcReset() { qmcPhase=1; qmcQIdx=0; qmcScores=[0,0]; qmcWaiting=false; document.getElementById('qmc-btn').onclick=qmcAction; }
+function qmcShareCode(){const t='Code Qui me connaît : '+qmcrCode;if(navigator.share)navigator.share({text:t});else if(navigator.clipboard)navigator.clipboard.writeText(t);}
+function qmcCancelRemote(){if(qmcrRef){qmcrRef.off();qmcrRef.remove();qmcrRef=null;}qmcrClearSession();qmcShowMode();}
+
+async function qmcJoinRemote(){
+  const val=document.getElementById('qmc-input').value.trim().toUpperCase();
+  document.getElementById('qmc-err').textContent='';
+  if(val.length!==4){document.getElementById('qmc-err').textContent='Code à 4 lettres requis';return;}
+  let snap;try{snap=await db.ref('qmc/'+val).get();}catch{document.getElementById('qmc-err').textContent='Erreur réseau';return;}
+  if(!snap.exists()){document.getElementById('qmc-err').textContent='Partie introuvable';return;}
+  const d=snap.val();if(d.status!=='waiting'){document.getElementById('qmc-err').textContent='Partie déjà lancée';return;}
+  qmcrCode=val;qmcrMe=2;qmcrSaveSession();
+  qmcrRef=db.ref('qmc/'+qmcrCode);
+  await qmcrRef.update({status:'playing'});
+  qmcrEnterGame((await qmcrRef.get()).val());
+}
+
+function qmcrEnterGame(d){
+  QMC_ALL.forEach(s=>{document.getElementById(s).style.display=s==='qmc-remote'?'flex':'none';});
+  if(!qmcrListening&&qmcrRef){
+    qmcrListening=true;
+    qmcrRef.on('value',snap=>{if(!snap.exists())return;qmcrRender(snap.val());});
+  }
+  qmcrRender(d);
+}
+
+function qmcrRender(d){
+  if(d.status==='finished'){qmcrShowEnd(d);return;}
+  const sc=(d.scores||'0,0').split(',').map(Number);
+  document.getElementById('qmcr-s1').textContent=sc[0];
+  document.getElementById('qmcr-s2').textContent=sc[1];
+  const sub=d.phase===1?1:2, gue=d.phase===1?2:1;
+  const q=QMCQ[d.qIdx];
+  const phLbl='Phase '+d.phase+' · Sur Joueur '+sub;
+  document.getElementById('qmcr-phase-lbl').textContent=phLbl;
+  document.getElementById('qmcr-q').textContent=q;
+  document.getElementById('qmcr-rev-lbl').textContent=phLbl+' · Q'+(d.qIdx+1);
+  document.getElementById('qmcr-rev-q').textContent=q;
+
+  const iSub=qmcrMe===sub, iGue=qmcrMe===gue;
+  document.getElementById('qmcr-btn').style.display='none';
+
+  if(d.step==='subject_answer'){
+    if(iSub){
+      qmcrShowSection('qmcr-active');
+      document.getElementById('qmcr-who').textContent='Écrivez votre réponse (l\'autre ne la verra pas encore) :';
+      document.getElementById('qmcr-ans').value='';document.getElementById('qmcr-err').textContent='';
+      document.getElementById('qmcr-btn').textContent='Valider →';document.getElementById('qmcr-btn').style.display='block';
+    } else {
+      qmcrShowSection('qmcr-waiting');
+      document.getElementById('qmcr-wait-msg').textContent='Joueur '+sub+' écrit sa réponse…';
+      document.getElementById('qmcr-wait-sub').textContent='Question '+(d.qIdx+1)+' / '+QMCQ.length;
+    }
+  } else if(d.step==='guesser_guess'){
+    if(iGue){
+      qmcrShowSection('qmcr-active');
+      document.getElementById('qmcr-who').textContent='Devinez la réponse de Joueur '+sub+' :';
+      document.getElementById('qmcr-ans').value='';document.getElementById('qmcr-err').textContent='';
+      document.getElementById('qmcr-btn').textContent='Valider →';document.getElementById('qmcr-btn').style.display='block';
+    } else {
+      qmcrShowSection('qmcr-waiting');
+      document.getElementById('qmcr-wait-msg').textContent='Joueur '+gue+' devine…';
+      document.getElementById('qmcr-wait-sub').textContent='Question '+(d.qIdx+1)+' / '+QMCQ.length;
+    }
+  } else if(d.step==='judge'){
+    qmcrShowSection('qmcr-reveal');
+    document.getElementById('qmcr-g-who').textContent='Réponse de Joueur '+gue;
+    document.getElementById('qmcr-g-val').textContent=d.guesserGuess||'—';
+    document.getElementById('qmcr-s-who').textContent='Vraie réponse de Joueur '+sub;
+    document.getElementById('qmcr-s-val').textContent=d.subjectAnswer||'—';
+    if(iSub){document.getElementById('qmcr-judge-btns').style.display='flex';document.getElementById('qmcr-judge-wait').style.display='none';}
+    else{document.getElementById('qmcr-judge-btns').style.display='none';document.getElementById('qmcr-judge-wait').style.display='block';}
+  }
+}
+
+function qmcrAction(){
+  const ans=document.getElementById('qmcr-ans').value.trim();
+  document.getElementById('qmcr-err').textContent='';
+  if(!ans){document.getElementById('qmcr-err').textContent='Réponse requise';return;}
+  document.getElementById('qmcr-btn').disabled=true;
+  qmcrRef.get().then(snap=>{
+    const d=snap.val();
+    if(d.step==='subject_answer')qmcrRef.update({subjectAnswer:ans,step:'guesser_guess'}).then(()=>document.getElementById('qmcr-btn').disabled=false);
+    else if(d.step==='guesser_guess')qmcrRef.update({guesserGuess:ans,step:'judge'}).then(()=>document.getElementById('qmcr-btn').disabled=false);
+  });
+}
+
+async function qmcrScore(ok){
+  document.getElementById('qmcr-judge-btns').style.display='none';
+  document.getElementById('qmcr-judge-wait').style.display='block';
+  const snap=await qmcrRef.get();const d=snap.val();
+  const sc=(d.scores||'0,0').split(',').map(Number);
+  if(ok)sc[d.phase-1]++;
+  const ni=d.qIdx+1;
+  if(ni>=QMCQ.length){
+    if(d.phase===1)await qmcrRef.update({scores:sc.join(','),phase:2,qIdx:0,step:'subject_answer',subjectAnswer:'',guesserGuess:''});
+    else await qmcrRef.update({scores:sc.join(','),status:'finished'});
+  } else {
+    await qmcrRef.update({scores:sc.join(','),qIdx:ni,step:'subject_answer',subjectAnswer:'',guesserGuess:''});
+  }
+}
+
+function qmcrShowEnd(d){
+  const sc=(d.scores||'0,0').split(',').map(Number);
+  document.getElementById('qmcr-s1').textContent=sc[0];document.getElementById('qmcr-s2').textContent=sc[1];
+  qmcrShowSection('qmcr-reveal');
+  document.getElementById('qmcr-rev-lbl').textContent='Fin de partie';
+  document.getElementById('qmcr-rev-q').textContent=sc[0]>sc[1]?'🎉 Joueur 1 gagne !':sc[1]>sc[0]?'🎉 Joueur 2 gagne !':'Égalité parfaite !';
+  document.getElementById('qmcr-judge-btns').style.display='none';
+  document.getElementById('qmcr-judge-wait').style.display='none';
+  document.getElementById('qmcr-btn').style.display='none';
+}
+
+function qmcrQuit(){qmcrListening=false;if(qmcrRef){qmcrRef.off();qmcrRef=null;}qmcrClearSession();}
+function qmcrSaveSession(){try{localStorage.setItem('duo_qmc_code',qmcrCode);localStorage.setItem('duo_qmc_me',qmcrMe);}catch{}}
+function qmcrClearSession(){try{localStorage.removeItem('duo_qmc_code');localStorage.removeItem('duo_qmc_me');}catch{}}
+
+window.addEventListener('load',()=>{
+  try{
+    const c=localStorage.getItem('duo_qmc_code'),m=+localStorage.getItem('duo_qmc_me');
+    if(!c||!m)return;
+    db.ref('qmc/'+c).get().then(snap=>{
+      if(!snap.exists()||snap.val().status==='finished'){qmcrClearSession();return;}
+      qmcrCode=c;qmcrMe=m;qmcrRef=db.ref('qmc/'+qmcrCode);
+      openGame('qmc');qmcrEnterGame(snap.val());
+    }).catch(()=>qmcrClearSession());
+  }catch{}
+},false);
+
+// ─── UTILS ──────────────────────────────────────────────────
+function randCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ';return Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join('');}
 </script>
 </body>
 </html>
