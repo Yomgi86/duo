@@ -22,10 +22,86 @@
       --p2:        var(--gold);
       --cell:      clamp(36px, calc((100vw - 96px) / 7), 52px);
     }
+    [data-theme="light"] {
+      --ink:       #F0F4F8;
+      --ink-2:     #FFFFFF;
+      --sky:       #2E6578;
+      --prune:     #7A5A7D;
+      --gold:      #B8940A;
+      --raspberry: #D41040;
+      --line:      rgba(0,0,0,0.10);
+      --surf:      rgba(0,0,0,0.045);
+      --bg:        #E8EEF4;
+      --p1:        var(--raspberry);
+      --p2:        var(--gold);
+    }
+    [data-theme="light"] html, [data-theme="light"] body,
+    html[data-theme="light"], html[data-theme="light"] body {
+      background: var(--bg); color: #1A2733;
+    }
+    html[data-theme="light"] .screen,
+    html[data-theme="light"] .game-wrap { background: var(--bg); }
+    html[data-theme="light"] #hub { background: radial-gradient(circle at 85% 8%, rgba(212,16,64,.08), transparent 22rem), radial-gradient(circle at 10% 90%, rgba(46,101,120,.09), transparent 20rem), var(--bg); }
+    html[data-theme="light"] .game-card { background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    html[data-theme="light"] .code-box,
+    html[data-theme="light"] .code-input { background: #fff; color: #1A2733; border-color: rgba(0,0,0,.15); }
+    html[data-theme="light"] .btn-ghost { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.12); color: #1A2733; }
+    html[data-theme="light"] .top-back { color: rgba(0,0,0,.5); }
+    html[data-theme="light"] .top-back:active { color: #1A2733; }
+    html[data-theme="light"] .top-bar { border-bottom-color: rgba(0,0,0,.08); }
+    html[data-theme="light"] .win-overlay { background: rgba(232,238,244,.9); }
+    html[data-theme="light"] .win-card { background: #fff; border-color: rgba(0,0,0,.1); }
+    html[data-theme="light"] #scores-overlay { background: var(--bg); }
+    html[data-theme="light"] #profiles-overlay { background: var(--bg); }
+    html[data-theme="light"] .scores-row { border-bottom-color: rgba(0,0,0,.07); }
+    html[data-theme="light"] .game-card .card-name { color: #1A2733; }
+    html[data-theme="light"] .yams-die,
+    html[data-theme="light"] .yams-cat,
+    html[data-theme="light"] .bs-ship-btn,
+    html[data-theme="light"] .ttt-cell { background: #fff; border-color: rgba(0,0,0,.12); }
+    html[data-theme="light"] .bs-c { background: rgba(0,0,0,.05); }
+    html[data-theme="light"] .bs-cs { background: rgba(0,0,0,.05); }
+    html[data-theme="light"] .pendu-kb-btn { background: #fff; border-color: rgba(0,0,0,.12); color: #1A2733; }
+    html[data-theme="light"] #notif-banner { background: #fff; border-color: rgba(0,0,0,.12); color: #1A2733; }
+    html[data-theme="light"] .chess-sq.light { background: #b5d0d8; }
+    html[data-theme="light"] .chess-sq.dark  { background: #4a7080; }
+    html[data-theme="light"] .draughts-sq.dsq-l { background: #b5d0d8; }
+    html[data-theme="light"] .draughts-sq.dsq-d { background: #4a7080; }
+    html[data-theme="light"] .pb-cat-in { background: #fff; color: #1A2733; border-color: rgba(0,0,0,.12); }
+    html[data-theme="light"] .pb-cell { background: #fff; border-color: rgba(0,0,0,.1); color: #1A2733; }
+    html[data-theme="light"] .ans-box { background: #fff; }
+    html[data-theme="light"] .qmc-in { background: #fff; color: #1A2733; }
+    html[data-theme="light"] #p4-board { background: #d4dde6; }
+    html[data-theme="light"] .cell { background: rgba(0,0,0,.06); }
+    html[data-theme="light"] .hub-eyebrow,
+    html[data-theme="light"] .hub-sub,
+    html[data-theme="light"] .mode-sub,
+    html[data-theme="light"] .wait-row,
+    html[data-theme="light"] .sec-lbl,
+    html[data-theme="light"] .score-lbl,
+    html[data-theme="light"] .turn-text,
+    html[data-theme="light"] .col-hint,
+    html[data-theme="light"] .vod-counter,
+    html[data-theme="light"] .pb-cat-lbl,
+    html[data-theme="light"] .pb-compare-cat,
+    html[data-theme="light"] .ans-who,
+    html[data-theme="light"] .bs-lbl,
+    html[data-theme="light"] .bs-sname,
+    html[data-theme="light"] .yams-cat-name,
+    html[data-theme="light"] .scores-sub,
+    html[data-theme="light"] .win-label,
+    html[data-theme="light"] .card-name,
+    html[data-theme="light"] #pendu-status { color: rgba(26,39,51,.55); }
+    html[data-theme="light"] .err-msg { color: var(--raspberry); }
+    html[data-theme="light"] .turn-pill { background: rgba(0,0,0,.06); border-color: rgba(0,0,0,.1); }
+    html[data-theme="light"] .code-box { color: #1A2733; }
+    html[data-theme="light"] .pendu-letter { border-bottom-color: rgba(26,39,51,.4); }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --txt: #fff; }
+    [data-theme="light"] { --txt: #1A2733; }
     html, body {
       height: 100%; overflow: hidden;
-      background: var(--bg); color: #fff;
+      background: var(--bg); color: var(--txt);
       font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
       user-select: none; -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
@@ -264,6 +340,7 @@
         <div class="hub-sub">Jeux à deux · à distance ou en local</div>
       </div>
       <div style="display:flex;gap:.45rem;flex-shrink:0;margin-top:.25rem">
+        <button id="theme-btn" onclick="toggleTheme()" style="background:var(--surf);border:1px solid var(--line);color:rgba(255,255,255,.7);font-family:inherit;font-size:.72rem;font-weight:800;border-radius:8px;padding:.45rem .65rem;cursor:pointer">☀️</button>
         <button onclick="openProfiles()" style="background:var(--surf);border:1px solid var(--line);color:rgba(255,255,255,.7);font-family:inherit;font-size:.72rem;font-weight:800;border-radius:8px;padding:.45rem .75rem;cursor:pointer">👤 Profils</button>
         <button onclick="showScores()" style="background:var(--surf);border:1px solid var(--line);color:rgba(255,255,255,.7);font-family:inherit;font-size:.72rem;font-weight:800;border-radius:8px;padding:.45rem .75rem;cursor:pointer">🏆 Scores</button>
       </div>
@@ -901,7 +978,7 @@
     <div class="chess-board" id="chess-board"></div>
     <div class="win-overlay" id="chess-win">
       <div class="win-card">
-        <div class="win-label">Fin de partie</div>
+        <div class="win-label" id="chess-win-lbl">Fin de partie</div>
         <div class="win-msg" id="chess-win-msg">—</div>
       </div>
       <div class="win-btns">
@@ -2770,6 +2847,20 @@ async function penduRematch(){
     btn.disabled=true;btn.textContent='Demandé…';
   }
 }
+
+// ─── THÈME ───────────────────────────────────────────────────
+function applyTheme(light){
+  document.documentElement.setAttribute('data-theme', light?'light':'dark');
+  const btn=document.getElementById('theme-btn');
+  if(btn)btn.textContent=light?'🌙':'☀️';
+  try{localStorage.setItem('duo_theme',light?'light':'dark');}catch{}
+}
+function toggleTheme(){
+  const isLight=document.documentElement.getAttribute('data-theme')==='light';
+  applyTheme(!isLight);
+}
+// Init theme on load
+(function(){try{const t=localStorage.getItem('duo_theme');if(t==='light')applyTheme(true);}catch{}})();
 
 // ─── UTILS ──────────────────────────────────────────────────
 function randCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ';return Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join('');}
