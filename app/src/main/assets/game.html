@@ -1080,7 +1080,7 @@ const PB_DURATION = 90; // seconds
 
 let pbLocal = false, pbCode = '', pbMe = 0, pbRef = null, pbListening = false;
 let pbTimerInterval = null, pbTimerEnd = 0;
-let pbRound = 1, pbLetter = 'A';
+let pbRound = 1, pbLetter = 'A', pbCurrentRound = 0;
 let pbLocalAnswers = [{}, {}]; // [p1, p2]
 let pbLocalPhase = 0; // 0=p1 filling, 1=p2 filling, 2=results
 
@@ -1171,21 +1171,29 @@ function pbShowLocalResults(){
 }
 
 // ── REMOTE ──
+function pbSetupListener(){
+  if(pbListening||!pbRef) return;
+  pbListening=true;
+  pbRef.on('value',snap=>{
+    if(!snap.exists())return;
+    const d=snap.val();
+    if(d.status==='comparing'){ pbShowRemoteResults(d); return; }
+    if(d.status!=='playing') return;
+    const onWait=document.getElementById('pb-wait').style.display!=='none';
+    if(onWait||d.round!==pbCurrentRound){ pbEnterRemote(d); return; }
+    pbRemoteRender(d);
+  });
+}
+
 async function pbCreateRemote(){
   pbLocal=false; pbCode=randCode(); pbMe=1; pbSaveSession();
-  pbLetter=pbRandLetter();
-  const startTs=Date.now()+5000; // 5s grace before timer
+  pbLetter=pbRandLetter(); pbCurrentRound=0;
+  const startTs=Date.now()+5000;
   await db.ref('pb/'+pbCode).set({status:'waiting',letter:pbLetter,round:1,p1answers:'{}',p2answers:'{}',p1ready:false,p2ready:false,scores:'0,0',startTs});
   document.getElementById('pb-code-box').textContent=pbCode;
   pbShowSection('pb-wait');
   pbRef=db.ref('pb/'+pbCode);
-  pbRef.on('value',snap=>{
-    if(!snap.exists())return;
-    const d=snap.val();
-    if(d.status==='playing'&&document.getElementById('pb-wait').style.display!=='none') pbEnterRemote(d);
-    else if(d.status==='playing') pbRemoteRender(d);
-    else if(d.status==='comparing') pbShowRemoteResults(d);
-  });
+  pbSetupListener();
 }
 
 function pbShareCode(){ const t='Code Petit Bac : '+pbCode; if(navigator.share)navigator.share({text:t}); else if(navigator.clipboard)navigator.clipboard.writeText(t); }
@@ -1207,27 +1215,19 @@ async function pbJoinRemote(){
 }
 
 function pbEnterRemote(d){
-  pbLetter=d.letter; pbRound=d.round||1;
+  pbLetter=d.letter; pbRound=d.round||1; pbCurrentRound=d.round||1;
   document.getElementById('pb-letter-big').textContent=pbLetter;
   document.getElementById('pb-fill-who').textContent='Vous';
   pbBuildCats({});
   pbShowSection('pb-fill');
   pbStartTimerFrom(d.startTs||Date.now());
-  if(!pbListening&&pbRef){
-    pbListening=true;
-    pbRef.on('value',snap=>{
-      if(!snap.exists())return;
-      const d2=snap.val();
-      if(d2.status==='comparing') pbShowRemoteResults(d2);
-      else pbRemoteRender(d2);
-    });
-  }
+  pbSetupListener();
 }
 
 function pbRemoteRender(d){
-  // Check if both ready → trigger comparing
-  if(d.p1ready&&d.p2ready&&d.status==='playing'&&pbMe===1){
-    pbRef.update({status:'comparing'});
+  // Check if both ready → trigger comparing (either player can write this, it's idempotent)
+  if(d.p1ready&&d.p2ready&&d.status==='playing'){
+    pbRef.update({status:'comparing'}); return;
   }
   // Show submitted indicator in timer
   const myReady=pbMe===1?d.p1ready:d.p2ready;
@@ -1312,14 +1312,10 @@ async function pbNewRound(){
     pbLetter=pbRandLetter();
     pbShowFill(1);
   } else {
-    pbLetter=pbRandLetter();
+    const newLetter=pbRandLetter();
     const startTs=Date.now()+3000;
-    await pbRef.update({status:'playing',letter:pbLetter,round:pbRound,p1answers:'{}',p2answers:'{}',p1ready:false,p2ready:false,startTs});
-    document.getElementById('pb-letter-big').textContent=pbLetter;
-    document.getElementById('pb-fill-who').textContent='Vous';
-    pbBuildCats({});
-    pbShowSection('pb-fill');
-    pbStartTimerFrom(startTs);
+    await pbRef.update({status:'playing',letter:newLetter,round:pbRound,p1answers:'{}',p2answers:'{}',p1ready:false,p2ready:false,startTs});
+    // listener handles UI for both players via pbEnterRemote
   }
 }
 
