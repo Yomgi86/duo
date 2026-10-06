@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -225,6 +225,22 @@
     .dr-p1 { color:var(--raspberry); text-shadow:0 1px 4px rgba(0,0,0,.6); }
     .dr-p2 { color:var(--gold); text-shadow:0 1px 4px rgba(0,0,0,.6); }
 
+    /* PENDU */
+    .pendu-word { display:flex; gap:5px; flex-wrap:wrap; justify-content:center; }
+    .pendu-letter { width:clamp(26px,8.5vw,36px); height:clamp(34px,10vw,44px); border-bottom:2.5px solid rgba(255,255,255,.45); display:flex; align-items:flex-end; justify-content:center; padding-bottom:3px; font-size:clamp(1rem,5.5vw,1.35rem); font-weight:900; }
+    .pendu-letter.gap { border-bottom-color:transparent; width:14px; }
+    .pendu-keyboard { display:flex; flex-direction:column; gap:5px; width:100%; max-width:360px; }
+    .pendu-kb-row { display:flex; gap:4px; justify-content:center; }
+    .pendu-kb-btn { flex:1; max-width:33px; padding:.42rem 0; background:var(--ink-2); border:1px solid var(--line); border-radius:6px; font-family:inherit; font-size:.78rem; font-weight:800; color:#fff; cursor:pointer; transition:opacity .1s; }
+    .pendu-kb-btn:active { opacity:.6; }
+    .pendu-kb-btn.used { opacity:.2; pointer-events:none; }
+    .pendu-kb-btn.kb-ok { background:rgba(85,184,85,.18); border-color:rgba(85,184,85,.45); color:rgba(120,220,120,1); opacity:1; }
+    .pendu-kb-btn.kb-no { background:rgba(237,37,78,.1); border-color:rgba(237,37,78,.3); color:rgba(237,37,78,.8); opacity:.7; }
+    /* NOTIFICATION BANNER */
+    #notif-banner { position:fixed; top:calc(env(safe-area-inset-top,0px) + 60px); left:50%; transform:translateX(-50%) translateY(-8px); background:var(--ink-2); border:1px solid var(--line); border-radius:12px; padding:.6rem 1.2rem; font-size:.82rem; font-weight:700; box-shadow:0 8px 28px rgba(0,0,0,.55); z-index:200; opacity:0; transition:opacity .22s,transform .22s; pointer-events:none; white-space:nowrap; max-width:90vw; overflow:hidden; text-overflow:ellipsis; }
+    #notif-banner.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    /* PROFILS SCREEN */
+    .profile-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
     /* SCORES OVERLAY */
     #scores-overlay { position:fixed; inset:0; background:var(--bg); z-index:50; display:none; flex-direction:column; }
     #scores-overlay.active { display:flex; }
@@ -247,7 +263,10 @@
         <div class="hub-title">Duo</div>
         <div class="hub-sub">Jeux à deux · à distance ou en local</div>
       </div>
-      <button onclick="showScores()" style="background:var(--surf);border:1px solid var(--line);color:rgba(255,255,255,.7);font-family:inherit;font-size:.72rem;font-weight:800;border-radius:8px;padding:.45rem .75rem;cursor:pointer;margin-top:.25rem;flex-shrink:0">🏆 Scores</button>
+      <div style="display:flex;gap:.45rem;flex-shrink:0;margin-top:.25rem">
+        <button onclick="openProfiles()" style="background:var(--surf);border:1px solid var(--line);color:rgba(255,255,255,.7);font-family:inherit;font-size:.72rem;font-weight:800;border-radius:8px;padding:.45rem .75rem;cursor:pointer">👤 Profils</button>
+        <button onclick="showScores()" style="background:var(--surf);border:1px solid var(--line);color:rgba(255,255,255,.7);font-family:inherit;font-size:.72rem;font-weight:800;border-radius:8px;padding:.45rem .75rem;cursor:pointer">🏆 Scores</button>
+      </div>
     </div>
   </div>
   <div class="game-grid">
@@ -310,6 +329,12 @@
       <div class="card-icon">⬤</div>
       <div class="card-name">Dames</div>
       <div class="card-badge badge-local"><span class="badge-dot"></span>En local</div>
+    </div>
+    <div class="game-card" onclick="openGame('pendu')">
+      <div class="card-glow" style="background:var(--sky)"></div>
+      <div class="card-icon">🔤</div>
+      <div class="card-name">Pendu</div>
+      <div class="card-badge badge-both"><span class="badge-dot"></span>Local & Distance</div>
     </div>
   </div>
 </div>
@@ -919,6 +944,125 @@
   </div>
 </div>
 
+<!-- NOTIFICATION BANNER -->
+<div id="notif-banner"></div>
+
+<!-- PROFILS OVERLAY -->
+<div id="profiles-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:50;flex-direction:column">
+  <div class="top-bar">
+    <button class="top-back" onclick="closeProfiles()">← Retour</button>
+    <div class="top-title">Profils joueurs</div>
+    <div class="top-right"></div>
+  </div>
+  <div class="centered-body" style="gap:1.5rem">
+    <div style="font-size:2rem">👤</div>
+    <div class="mode-title">Vos profils</div>
+    <div style="display:flex;flex-direction:column;gap:1rem;width:100%;max-width:300px">
+      <div>
+        <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--raspberry);margin-bottom:.4rem">● Joueur 1</div>
+        <input id="profile-p1" class="code-input" style="font-size:1rem;letter-spacing:normal;text-indent:0;padding:.75rem 1rem" maxlength="16" placeholder="Joueur 1" autocomplete="off">
+      </div>
+      <div>
+        <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem">● Joueur 2</div>
+        <input id="profile-p2" class="code-input" style="font-size:1rem;letter-spacing:normal;text-indent:0;padding:.75rem 1rem" maxlength="16" placeholder="Joueur 2" autocomplete="off">
+      </div>
+    </div>
+    <button class="btn btn-primary btn-w" onclick="saveProfiles()">Enregistrer</button>
+    <div id="profiles-saved" style="font-size:.78rem;font-weight:700;color:rgba(85,184,85,.8);min-height:1.2em;text-align:center"></div>
+  </div>
+</div>
+
+<!-- PENDU -->
+<div id="game-pendu" class="game-wrap">
+  <div class="top-bar">
+    <button class="top-back" onclick="penduBackToHub()">← Retour</button>
+    <div class="top-title">Pendu</div>
+    <div class="top-right"></div>
+  </div>
+
+  <div id="pendu-mode" class="centered-body">
+    <div style="font-size:2.2rem">🔤</div>
+    <div class="mode-title">Pendu</div>
+    <div class="btn-group">
+      <button class="btn btn-ghost" onclick="penduStartLocal()">Jouer en local</button>
+      <button class="btn btn-primary" onclick="penduCreate()">Créer une partie à distance</button>
+      <button class="btn btn-ghost" onclick="penduShowJoin()">Rejoindre une partie</button>
+    </div>
+  </div>
+
+  <div id="pendu-wait" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;padding:1.5rem">
+    <div class="sec-lbl">Code de la partie</div>
+    <div class="code-box" id="pendu-code-box">----</div>
+    <div class="wait-row"><div class="spinner"></div>En attente de l'adversaire…</div>
+    <button class="btn btn-ghost btn-w" onclick="penduCancel()">Annuler</button>
+  </div>
+
+  <div id="pendu-join" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:1.5rem">
+    <input id="pendu-input" class="code-input" maxlength="4" placeholder="CODE" autocomplete="off"
+      oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')"
+      onkeydown="if(event.key==='Enter')penduJoin()">
+    <div id="pendu-err" class="err-msg"></div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="penduJoin()">Rejoindre</button>
+      <button class="btn btn-ghost" onclick="penduShowMode()">Retour</button>
+    </div>
+  </div>
+
+  <div id="pendu-word-entry" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;padding:1.5rem">
+    <div class="mode-title">Choisissez un mot</div>
+    <div class="mode-sub" id="pendu-word-sub">Entrez le mot que l'autre joueur devra deviner</div>
+    <input id="pendu-word-input" style="background:var(--surf);border:1px solid var(--line);color:#fff;font-family:inherit;font-size:1.4rem;font-weight:800;text-align:center;padding:.8rem 1.2rem;border-radius:var(--radius);width:100%;max-width:300px;text-transform:uppercase;letter-spacing:.1em"
+      maxlength="20" placeholder="MOT" autocomplete="off"
+      oninput="this.value=this.value.toUpperCase().replace(/[^A-ZÀÂÄÉÈÊËÎÏÔÙÛÜÇ -]/g,'')"
+      onkeydown="if(event.key==='Enter')penduConfirmWord()">
+    <div id="pendu-word-err" class="err-msg"></div>
+    <button class="btn btn-primary btn-w" onclick="penduConfirmWord()">Valider →</button>
+  </div>
+
+  <div id="pendu-wait-word" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:1.5rem">
+    <div style="font-size:2.5rem">🤔</div>
+    <div class="mode-title">L'adversaire choisit un mot…</div>
+    <div class="wait-row"><div class="spinner"></div>En attente…</div>
+  </div>
+
+  <div id="pendu-pass" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:1.5rem">
+    <div style="font-size:3rem">🙈</div>
+    <div class="mode-title">Passez le téléphone !</div>
+    <div class="mode-sub">J2 va deviner le mot — ne regardez pas !</div>
+    <button class="btn btn-primary btn-w" onclick="penduStartGuessing()">C'est à moi →</button>
+  </div>
+
+  <div id="pendu-game" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:.85rem;padding:1rem;overflow-y:auto;position:relative">
+    <svg id="pendu-svg" viewBox="0 0 100 120" width="80" height="96" style="flex-shrink:0">
+      <line x1="10" y1="115" x2="90" y2="115" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="30" y1="115" x2="30" y2="10" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="30" y1="10" x2="65" y2="10" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="65" y1="10" x2="65" y2="25" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/>
+      <circle id="pd-head" cx="65" cy="33" r="8" stroke="white" stroke-width="2.5" fill="none" style="display:none"/>
+      <line id="pd-body" x1="65" y1="41" x2="65" y2="72" stroke="white" stroke-width="2.5" stroke-linecap="round" style="display:none"/>
+      <line id="pd-arm-l" x1="65" y1="52" x2="48" y2="65" stroke="white" stroke-width="2.5" stroke-linecap="round" style="display:none"/>
+      <line id="pd-arm-r" x1="65" y1="52" x2="82" y2="65" stroke="white" stroke-width="2.5" stroke-linecap="round" style="display:none"/>
+      <line id="pd-leg-l" x1="65" y1="72" x2="50" y2="90" stroke="white" stroke-width="2.5" stroke-linecap="round" style="display:none"/>
+      <line id="pd-leg-r" x1="65" y1="72" x2="80" y2="90" stroke="white" stroke-width="2.5" stroke-linecap="round" style="display:none"/>
+      <line id="pd-foot" x1="65" y1="72" x2="65" y2="62" stroke="var(--raspberry)" stroke-width="3" stroke-linecap="round" style="display:none"/>
+    </svg>
+    <div id="pendu-word-disp" class="pendu-word" style="margin:.1rem 0"></div>
+    <div id="pendu-status" style="font-size:.8rem;font-weight:700;color:rgba(255,255,255,.45)"></div>
+    <div id="pendu-keyboard" class="pendu-keyboard"></div>
+    <div class="win-overlay" id="pendu-win">
+      <div class="win-card">
+        <div class="win-label" id="pendu-win-lbl">Résultat</div>
+        <div class="win-msg" id="pendu-win-msg">—</div>
+        <div style="font-size:.95rem;font-weight:700;margin-top:.5rem;color:rgba(255,255,255,.55)" id="pendu-win-word"></div>
+      </div>
+      <div class="win-btns">
+        <button class="btn btn-primary" id="pendu-rematch-btn" onclick="penduRematch()">Rejouer</button>
+        <button class="btn btn-ghost" onclick="penduBackToHub()">Quitter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- SCORES -->
 <div id="scores-overlay">
   <div class="top-bar">
@@ -1001,9 +1145,22 @@ async function p4Join(){
 
 function p4EnterRemote(){
   p4BuildBoard();p4RenderBoard();p4UpdateTurn();p4ShowGame();
+  let p4prevTurn=0;
   if(!p4listening&&p4ref){
     p4listening=true;
-    p4ref.on('value',snap=>{if(!snap.exists())return;const d=snap.val();p4ApplyState(d);p4RenderBoard();p4UpdateTurn();if(p4status==='finished')p4ShowResult(d.winner);});
+    p4ref.on('value',snap=>{
+      if(!snap.exists())return;const d=snap.val();
+      if(d.rm_p1&&d.rm_p2&&d.status==='finished'&&p4me===1){
+        p4ref.update({board:JSON.stringify(p4EmptyBoard()),turn:1,status:'playing',winner:0,rm_p1:false,rm_p2:false});
+        document.getElementById('p4-win').classList.remove('on');
+        p4board=p4EmptyBoard();p4turn=1;p4status='playing';p4RenderBoard();p4UpdateTurn();
+        return;
+      }
+      p4ApplyState(d);p4RenderBoard();p4UpdateTurn();
+      if(p4status==='finished')p4ShowResult(d.winner);
+      else if(d.turn===p4me&&p4prevTurn!==p4me)notifyTurn('Puissance 4');
+      p4prevTurn=d.turn;
+    });
   }
 }
 
@@ -1084,8 +1241,16 @@ function p4ShowResult(winner){
 async function p4Rematch(){
   document.getElementById('p4-win').classList.remove('on');
   p4board=p4EmptyBoard();p4turn=1;p4status='playing';p4RenderBoard();
-  if(p4local)p4UpdateTurn();
-  else await p4ref.update({board:JSON.stringify(p4board),turn:1,status:'playing',winner:0});
+  if(p4local){p4UpdateTurn();return;}
+  await p4ref.update({['rm_p'+p4me]:true});
+  const snap=await p4ref.get();const d=snap.val();
+  if(d.rm_p1&&d.rm_p2&&p4me===1){
+    await p4ref.update({board:JSON.stringify(p4EmptyBoard()),turn:1,status:'playing',winner:0,rm_p1:false,rm_p2:false});
+  } else {
+    document.getElementById('p4-win').classList.add('on');
+    document.getElementById('p4-win-lbl').textContent='⏳ En attente…';
+    document.getElementById('p4-win-msg').textContent='Revanche demandée';
+  }
 }
 
 function p4Quit(){
@@ -1859,6 +2024,7 @@ async function bsJoinRemote(){
   }
 }
 
+let bsPrevMyTurn=false;
 function bsRenderRemote(d){
   const mp=bsMe===1?'p1':'p2',op=bsMe===1?'p2':'p1';
   const myBoard=new Set(JSON.parse(d[mp+'board']||'[]'));
@@ -1872,6 +2038,8 @@ function bsRenderRemote(d){
   bsDrawAttack(opBoard,myShots,myTurn,true);
   bsDrawDefense(myBoard,opShots);
   bsSec('bs-game');
+  if(myTurn&&!bsPrevMyTurn)notifyTurn('Bataille navale');
+  bsPrevMyTurn=myTurn;
 }
 
 async function bsFireRemote(r,c,opBoard){
@@ -1895,6 +2063,7 @@ const SCORES_GAMES=[
   {id:'p4',label:'Puissance 4'},{id:'bs',label:'Bataille navale'},
   {id:'morpion',label:'Morpion'},{id:'echecs',label:'Échecs'},
   {id:'dames',label:'Dames'},{id:'yams',label:"Yam's"},{id:'pb',label:'Petit Bac'},
+  {id:'pendu',label:'Pendu'},
 ];
 function scoresGet(){try{return JSON.parse(localStorage.getItem('duo_scores'))||{};}catch{return {};}}
 function scoresAdd(game,winner){
@@ -1945,12 +2114,21 @@ async function tttJoin(){
 }
 function tttSetupListener(){
   if(tttListening||!tttRef)return;tttListening=true;
+  let tttPrevTurn=0;
   tttRef.on('value',snap=>{
     if(!snap.exists())return;const d=snap.val();
+    if(d.rm_p1&&d.rm_p2&&d.status==='finished'&&tttMe===1){
+      tttRef.update({board:'[0,0,0,0,0,0,0,0,0]',turn:1,winner:0,draw:false,status:'playing',rm_p1:false,rm_p2:false});
+      document.getElementById('ttt-win').classList.remove('on');
+      tttBoard=Array(9).fill(0);tttTurn=1;tttShowSection('ttt-game');tttRenderBoard();
+      return;
+    }
     if(d.status==='playing'||d.status==='finished'){
       tttBoard=JSON.parse(d.board||'[0,0,0,0,0,0,0,0,0]');tttTurn=d.turn;
       tttShowSection('ttt-game');tttRenderBoard();
       if(d.winner||d.draw)tttShowWin(d.winner||0,!!d.draw);
+      else if(d.turn===tttMe&&tttPrevTurn!==tttMe)notifyTurn('Morpion');
+      tttPrevTurn=d.turn;
     }
   });
 }
@@ -1998,10 +2176,18 @@ function tttShowWin(winner,draw){
   else{lbl.textContent='Victoire';msg.textContent=winner===tttMe?'Vous gagnez !':'Adversaire gagne !';scoresAdd('morpion',winner===tttMe?tttMe:3-tttMe);}
   document.getElementById('ttt-win').classList.add('on');
 }
-function tttRematch(){
+async function tttRematch(){
   document.getElementById('ttt-win').classList.remove('on');tttInit();
-  if(tttLocal){tttShowSection('ttt-game');tttRenderBoard();}
-  else if(tttMe===1)tttRef.update({board:'[0,0,0,0,0,0,0,0,0]',turn:1,winner:0,draw:false,status:'playing'});
+  if(tttLocal){tttShowSection('ttt-game');tttRenderBoard();return;}
+  await tttRef.update({['rm_p'+tttMe]:true});
+  const snap=await tttRef.get();const d=snap.val();
+  if(d.rm_p1&&d.rm_p2&&tttMe===1){
+    await tttRef.update({board:'[0,0,0,0,0,0,0,0,0]',turn:1,winner:0,draw:false,status:'playing',rm_p1:false,rm_p2:false});
+  } else {
+    document.getElementById('ttt-win').classList.add('on');
+    document.getElementById('ttt-win-lbl').textContent='⏳ En attente…';
+    document.getElementById('ttt-win-msg').textContent='Revanche demandée';
+  }
 }
 function tttShowSection(id){
   ['ttt-mode','ttt-wait','ttt-join','ttt-game'].forEach(s=>{const el=document.getElementById(s);if(el)el.style.display=s===id?'flex':'none';});
@@ -2117,12 +2303,25 @@ async function chessJoin(){
 }
 function chessSetupListener(){
   if(chessListening||!chessRef)return;chessListening=true;
+  let chessPrevColor='';
   chessRef.on('value',snap=>{
     if(!snap.exists())return;const d=snap.val();
+    if(d.rm_p1&&d.rm_p2&&d.status==='finished'&&chessMe===1){
+      const ng=new Chess();
+      chessRef.update({status:'playing',fen:ng.fen(),lastFrom:'',lastTo:'',winner:'',draw:false,rm_p1:false,rm_p2:false});
+      document.getElementById('chess-win').classList.remove('on');
+      chessGame=ng;chessSel=null;chessLastFrom='';chessLastTo='';chessShowSection('chess-game');chessRender();
+      return;
+    }
     if(d.status==='playing'||d.status==='finished'){
       chessGame.load(d.fen);chessLastFrom=d.lastFrom||'';chessLastTo=d.lastTo||'';
       chessShowSection('chess-game');chessRender();
       if(d.status==='finished')chessShowWinRemote(d);
+      else{
+        const myColor=chessMe===1?'w':'b';
+        if(chessGame.turn()===myColor&&chessPrevColor!==myColor)notifyTurn('Échecs');
+        chessPrevColor=chessGame.turn();
+      }
     }
   });
 }
@@ -2205,10 +2404,19 @@ function chessShowWinRemote(d){
   }
   document.getElementById('chess-win').classList.add('on');
 }
-function chessRematch(){
+async function chessRematch(){
   document.getElementById('chess-win').classList.remove('on');
-  if(chessLocal){chessGame=new Chess();chessSel=null;chessLastFrom='';chessLastTo='';chessShowSection('chess-game');chessRender();}
-  else if(chessMe===1){chessGame=new Chess();chessRef.update({status:'playing',fen:chessGame.fen(),lastFrom:'',lastTo:'',winner:'',draw:false});}
+  if(chessLocal){chessGame=new Chess();chessSel=null;chessLastFrom='';chessLastTo='';chessShowSection('chess-game');chessRender();return;}
+  await chessRef.update({['rm_p'+chessMe]:true});
+  const snap=await chessRef.get();const d=snap.val();
+  if(d.rm_p1&&d.rm_p2&&chessMe===1){
+    const ng=new Chess();
+    await chessRef.update({status:'playing',fen:ng.fen(),lastFrom:'',lastTo:'',winner:'',draw:false,rm_p1:false,rm_p2:false});
+  } else {
+    document.getElementById('chess-win').classList.add('on');
+    document.getElementById('chess-win-lbl').textContent='⏳ En attente…';
+    document.getElementById('chess-win-msg').textContent='Revanche demandée';
+  }
 }
 function chessShowSection(id){
   ['chess-mode','chess-wait','chess-join','chess-game'].forEach(s=>{const el=document.getElementById(s);if(el)el.style.display=s===id?'flex':'none';});
@@ -2339,6 +2547,228 @@ function pbResetCats(){
   PB_CATS.length=0;def.forEach(c=>PB_CATS.push(c));
   try{localStorage.removeItem('duo_pb_cats');}catch{}
   pbShowSection('pb-mode');
+}
+
+// ─── PROFILS ─────────────────────────────────────────────────
+function profileName(n){try{return localStorage.getItem('duo_p'+n+'_name')||'Joueur '+n;}catch{return 'Joueur '+n;}}
+function openProfiles(){
+  try{
+    const n1=profileName(1);const n2=profileName(2);
+    document.getElementById('profile-p1').value=n1==='Joueur 1'?'':n1;
+    document.getElementById('profile-p2').value=n2==='Joueur 2'?'':n2;
+  }catch{}
+  document.getElementById('profiles-overlay').style.display='flex';
+}
+function closeProfiles(){document.getElementById('profiles-overlay').style.display='none';}
+function saveProfiles(){
+  const n1=document.getElementById('profile-p1').value.trim()||'Joueur 1';
+  const n2=document.getElementById('profile-p2').value.trim()||'Joueur 2';
+  try{localStorage.setItem('duo_p1_name',n1);localStorage.setItem('duo_p2_name',n2);}catch{}
+  const el=document.getElementById('profiles-saved');el.textContent='✓ Enregistré';
+  setTimeout(()=>{el.textContent='';},2000);
+}
+
+// ─── NOTIFICATIONS ───────────────────────────────────────────
+let notifTimer=null;
+function notifyTurn(gameName){
+  const el=document.getElementById('notif-banner');if(!el)return;
+  el.textContent='🔔 C\'est votre tour — '+gameName;
+  el.classList.add('show');
+  if(notifTimer)clearTimeout(notifTimer);
+  notifTimer=setTimeout(()=>el.classList.remove('show'),3500);
+  try{if(window.Android&&window.Android.notifyTurn)window.Android.notifyTurn(gameName);}catch{}
+}
+
+// ─── PENDU ────────────────────────────────────────────────────
+const PENDU_PARTS=['pd-head','pd-body','pd-arm-l','pd-arm-r','pd-leg-l','pd-leg-r','pd-foot'];
+const PENDU_KB=[['A','Z','E','R','T','Y','U','I','O','P'],['Q','S','D','F','G','H','J','K','L','M'],['W','X','C','V','B','N']];
+const PENDU_SECS=['pendu-mode','pendu-wait','pendu-join','pendu-word-entry','pendu-wait-word','pendu-pass','pendu-game'];
+const PENDU_MAX=7;
+let penduLocal=false,penduCode='',penduMe=0,penduRef=null,penduListening=false;
+let penduWord='',penduGuesses='',penduErrors=0;
+
+function penduSec(id){PENDU_SECS.forEach(s=>{const el=document.getElementById(s);if(el)el.style.display=s===id?'flex':'none';});}
+function penduShowMode(){penduSec('pendu-mode');}
+function penduBackToHub(){if(penduRef){penduRef.off();penduRef=null;}penduListening=false;closeGame('pendu');penduShowMode();}
+function penduShowJoin(){document.getElementById('pendu-input').value='';document.getElementById('pendu-err').textContent='';penduSec('pendu-join');}
+function penduCancel(){if(penduRef){penduRef.off();penduRef.remove();penduRef=null;}penduListening=false;penduShowMode();}
+
+function penduStartLocal(){
+  penduLocal=true;penduMe=1;penduWord='';penduGuesses='';penduErrors=0;
+  document.getElementById('pendu-word-input').value='';
+  document.getElementById('pendu-word-sub').textContent='Entrez le mot que J2 devra deviner';
+  document.getElementById('pendu-word-err').textContent='';
+  penduSec('pendu-word-entry');
+}
+
+function penduConfirmWord(){
+  const w=document.getElementById('pendu-word-input').value.trim().toUpperCase();
+  if(w.replace(/[-\s]/g,'').length<2){document.getElementById('pendu-word-err').textContent='Mot trop court';return;}
+  document.getElementById('pendu-word-err').textContent='';
+  penduWord=w;
+  if(penduLocal){
+    document.getElementById('pendu-word-input').value='';
+    penduSec('pendu-pass');
+  } else {
+    penduRef.update({status:'playing',word:w,guesses:'',errors:0,winner:0});
+    penduGuesses='';penduErrors=0;
+    penduSec('pendu-game');penduRenderGame();
+  }
+}
+
+function penduStartGuessing(){penduSec('pendu-game');penduGuesses='';penduErrors=0;penduRenderGame();}
+
+async function penduCreate(){
+  penduLocal=false;penduCode=randCode();penduMe=1;
+  penduRef=db.ref('pendu/'+penduCode);
+  await penduRef.set({status:'waiting',word:'',guesses:'',errors:0,winner:0,rm_p1:false,rm_p2:false});
+  document.getElementById('pendu-code-box').textContent=penduCode;
+  penduSec('pendu-wait');
+  if(!penduListening){
+    penduListening=true;
+    penduRef.on('value',snap=>{
+      if(!snap.exists())return;const d=snap.val();
+      if(d.status==='word-entry'&&penduMe===1){
+        document.getElementById('pendu-word-input').value='';
+        document.getElementById('pendu-word-err').textContent='';
+        document.getElementById('pendu-word-sub').textContent='L\'adversaire est prêt — choisissez le mot';
+        penduSec('pendu-word-entry');
+      } else if(d.status==='playing'){
+        penduWord=d.word;penduGuesses=d.guesses||'';penduErrors=d.errors||0;
+        penduSec('pendu-game');penduRenderGame();
+        if(d.winner)penduShowWin(d.winner);
+      } else if(d.status==='finished'){
+        if(d.rm_p1&&d.rm_p2&&penduMe===1){
+          penduRef.update({status:'word-entry',word:'',guesses:'',errors:0,winner:0,rm_p1:false,rm_p2:false});
+          document.getElementById('pendu-win').classList.remove('on');
+          document.getElementById('pendu-win-lbl').textContent='Résultat';
+          const btn=document.getElementById('pendu-rematch-btn');btn.disabled=false;btn.textContent='Rejouer';
+          document.getElementById('pendu-word-input').value='';
+          document.getElementById('pendu-word-sub').textContent='Nouvelle manche — choisissez le mot';
+          penduSec('pendu-word-entry');
+        }
+      }
+    });
+  }
+}
+
+async function penduJoin(){
+  const code=document.getElementById('pendu-input').value.trim().toUpperCase();
+  document.getElementById('pendu-err').textContent='';
+  if(code.length!==4){document.getElementById('pendu-err').textContent='Code à 4 lettres requis';return;}
+  let snap;try{snap=await db.ref('pendu/'+code).get();}catch{document.getElementById('pendu-err').textContent='Erreur réseau';return;}
+  if(!snap.exists()){document.getElementById('pendu-err').textContent='Partie introuvable';return;}
+  const d=snap.val();if(d.status!=='waiting'){document.getElementById('pendu-err').textContent='Partie introuvable';return;}
+  penduLocal=false;penduCode=code;penduMe=2;
+  penduRef=db.ref('pendu/'+penduCode);
+  await penduRef.update({status:'word-entry'});
+  penduSec('pendu-wait-word');
+  if(!penduListening){
+    penduListening=true;
+    penduRef.on('value',snap=>{
+      if(!snap.exists())return;const d2=snap.val();
+      if(d2.status==='playing'){
+        penduWord=d2.word;penduGuesses=d2.guesses||'';penduErrors=d2.errors||0;
+        penduSec('pendu-game');penduRenderGame();
+        if(d2.winner)penduShowWin(d2.winner);
+      } else if(d2.status==='word-entry'&&penduMe===2){
+        penduWord='';penduGuesses='';penduErrors=0;
+        penduSec('pendu-wait-word');
+        document.getElementById('pendu-win').classList.remove('on');
+        const btn=document.getElementById('pendu-rematch-btn');btn.disabled=false;btn.textContent='Rejouer';
+      }
+    });
+  }
+}
+
+function penduGuessLetter(letter){
+  if(penduGuesses.includes(letter))return;
+  if(!penduLocal&&penduMe!==2)return;
+  penduGuesses+=letter;
+  const letters=penduWord.replace(/[-\s]/g,'').split('');
+  const inWord=letters.includes(letter);
+  if(!inWord)penduErrors++;
+  const won=letters.every(c=>penduGuesses.includes(c));
+  const lost=penduErrors>=PENDU_MAX;
+  if(penduLocal){
+    penduRenderGame();
+    if(won)penduShowWin(2);else if(lost)penduShowWin(1);
+  } else {
+    penduRenderGame();
+    penduRef.update({guesses:penduGuesses,errors:penduErrors,winner:won?2:lost?1:0,status:(won||lost)?'finished':'playing'});
+  }
+}
+
+function penduRenderGame(){
+  PENDU_PARTS.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.style.display=i<penduErrors?'':'none';});
+  const el=document.getElementById('pendu-word-disp');el.innerHTML='';
+  penduWord.split('').forEach(c=>{
+    const div=document.createElement('div');
+    if(c===' '){div.className='pendu-letter gap';}
+    else if(c==='-'){div.className='pendu-letter';div.textContent='-';}
+    else{div.className='pendu-letter';div.textContent=penduGuesses.includes(c)?c:'';}
+    el.appendChild(div);
+  });
+  const kb=document.getElementById('pendu-keyboard');kb.innerHTML='';
+  const canGuess=penduLocal||(penduMe===2);
+  PENDU_KB.forEach(row=>{
+    const rowEl=document.createElement('div');rowEl.className='pendu-kb-row';
+    row.forEach(letter=>{
+      const btn=document.createElement('button');btn.className='pendu-kb-btn';btn.textContent=letter;
+      const inWord=penduWord.includes(letter);
+      const guessed=penduGuesses.includes(letter);
+      if(guessed){btn.classList.add('used');if(inWord)btn.classList.add('kb-ok');else btn.classList.add('kb-no');}
+      if(canGuess)btn.onclick=()=>penduGuessLetter(letter);
+      rowEl.appendChild(btn);
+    });
+    kb.appendChild(rowEl);
+  });
+  if(!canGuess){kb.style.opacity='.3';kb.style.pointerEvents='none';}else{kb.style.opacity='';kb.style.pointerEvents='';}
+  const rem=PENDU_MAX-penduErrors;
+  document.getElementById('pendu-status').textContent='Erreurs : '+penduErrors+'/'+PENDU_MAX+' — '+rem+' coup'+(rem>1?'s':'')+' restant'+(rem>1?'s':'');
+}
+
+function penduShowWin(winner){
+  const lbl=document.getElementById('pendu-win-lbl');
+  const msg=document.getElementById('pendu-win-msg');
+  if(penduLocal){
+    lbl.textContent=winner===2?'Bravo !':'Perdu…';
+    msg.textContent=winner===2?'J2 a deviné !':'J1 a gagné !';
+    scoresAdd('pendu',winner);
+  } else {
+    const iGuesser=penduMe===2;
+    lbl.textContent=winner===2?'Deviné !':'Perdu…';
+    msg.textContent=winner===2?(iGuesser?'Vous avez deviné !':'L\'adversaire a deviné !'):(iGuesser?'Vous avez perdu…':'Vous avez gagné !');
+    scoresAdd('pendu',winner);
+  }
+  document.getElementById('pendu-win-word').textContent='Mot : '+penduWord;
+  document.getElementById('pendu-win').classList.add('on');
+}
+
+async function penduRematch(){
+  document.getElementById('pendu-win').classList.remove('on');
+  if(penduLocal){
+    penduWord='';penduGuesses='';penduErrors=0;
+    document.getElementById('pendu-word-input').value='';
+    document.getElementById('pendu-word-sub').textContent='Entrez le mot que J2 devra deviner';
+    penduSec('pendu-word-entry');return;
+  }
+  const btn=document.getElementById('pendu-rematch-btn');
+  await penduRef.update({['rm_p'+penduMe]:true});
+  const snap=await penduRef.get();const d=snap.val();
+  if(d.rm_p1&&d.rm_p2&&penduMe===1){
+    await penduRef.update({status:'word-entry',word:'',guesses:'',errors:0,winner:0,rm_p1:false,rm_p2:false});
+    penduWord='';penduGuesses='';penduErrors=0;
+    document.getElementById('pendu-word-input').value='';
+    document.getElementById('pendu-word-sub').textContent='Nouvelle manche — choisissez le mot';
+    penduSec('pendu-word-entry');
+  } else {
+    document.getElementById('pendu-win').classList.add('on');
+    document.getElementById('pendu-win-lbl').textContent='⏳ En attente…';
+    document.getElementById('pendu-win-msg').textContent='Revanche demandée';
+    document.getElementById('pendu-win-word').textContent='';
+    btn.disabled=true;btn.textContent='Demandé…';
+  }
 }
 
 // ─── UTILS ──────────────────────────────────────────────────
