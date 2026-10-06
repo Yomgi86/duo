@@ -180,6 +180,60 @@
     .bs-dot { width:9px;height:9px;border-radius:2px;background:var(--sky); }
     .bs-dot-g{ background:var(--gold); }
     .bs-sname{ font-size:.56rem;font-weight:700;color:rgba(255,255,255,.48); }
+    /* MORPION */
+    .ttt-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; width:min(280px,82vw); }
+    .ttt-cell { aspect-ratio:1; background:var(--ink-2); border:1px solid var(--line); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:2.6rem; cursor:pointer; transition:background .1s; }
+    .ttt-cell:active { background:var(--surf); }
+    .ttt-cell.ttt-x { color:var(--raspberry); }
+    .ttt-cell.ttt-o { color:var(--gold); }
+    .ttt-cell.ttt-win { animation:pulse 1s ease infinite; }
+    .ttt-cell.ttt-x.ttt-win { background:rgba(237,37,78,.15); }
+    .ttt-cell.ttt-o.ttt-win { background:rgba(243,222,138,.15); }
+
+    /* YAM'S */
+    .yams-dice-row { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+    .yams-die { width:52px; height:52px; background:var(--ink-2); border:2px solid var(--line); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.9rem; cursor:pointer; transition:border-color .15s,background .15s; flex-shrink:0; }
+    .yams-die.kept { border-color:var(--gold); background:rgba(243,222,138,.09); }
+    .yams-die:active { opacity:.7; }
+    .yams-cats { display:grid; grid-template-columns:1fr 1fr; gap:5px; width:100%; padding:0 .25rem; }
+    .yams-cat { background:var(--ink-2); border:1px solid var(--line); border-radius:8px; padding:.55rem .75rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:.4rem; transition:border-color .1s; }
+    .yams-cat:active { background:var(--surf); }
+    .yams-cat.taken { opacity:.38; pointer-events:none; }
+    .yams-cat-name { font-size:.68rem; font-weight:700; color:rgba(255,255,255,.55); }
+    .yams-cat-val { font-size:1rem; font-weight:900; }
+    .yams-pot { color:rgba(255,255,255,.35); font-size:.88rem; }
+
+    /* ÉCHECS */
+    .chess-board { display:grid; grid-template-columns:repeat(8,1fr); width:min(320px,92vw); aspect-ratio:1; border:2px solid var(--line); border-radius:4px; overflow:hidden; }
+    .chess-sq { display:flex; align-items:center; justify-content:center; font-size:min(7.5vw,30px); cursor:pointer; user-select:none; -webkit-user-select:none; transition:background .08s; position:relative; }
+    .chess-sq.light { background:#6b9fa8; }
+    .chess-sq.dark  { background:#2a4050; }
+    .chess-sq.selected  { background:rgba(243,222,138,.6)!important; }
+    .chess-sq.movable   { background:rgba(243,222,138,.22)!important; }
+    .chess-sq.movable::after { content:''; position:absolute; width:38%; height:38%; border-radius:50%; background:rgba(243,222,138,.55); pointer-events:none; }
+    .chess-sq.last-mv   { background:rgba(237,37,78,.22)!important; }
+    .chess-sq.in-check  { background:rgba(237,37,78,.5)!important; }
+    .chess-sq span { pointer-events:none; line-height:1; }
+
+    /* DAMES */
+    .draughts-board { display:grid; grid-template-columns:repeat(8,1fr); width:min(320px,92vw); aspect-ratio:1; border:2px solid var(--line); border-radius:4px; overflow:hidden; }
+    .draughts-sq { display:flex; align-items:center; justify-content:center; font-size:min(7vw,27px); cursor:pointer; transition:background .1s; }
+    .draughts-sq.dsq-l { background:#6b9fa8; }
+    .draughts-sq.dsq-d { background:#2a4050; }
+    .draughts-sq.dsq-sel { background:rgba(243,222,138,.5)!important; }
+    .draughts-sq.dsq-mv  { background:rgba(243,222,138,.18)!important; }
+    .dr-p1 { color:var(--raspberry); text-shadow:0 1px 4px rgba(0,0,0,.6); }
+    .dr-p2 { color:var(--gold); text-shadow:0 1px 4px rgba(0,0,0,.6); }
+
+    /* SCORES OVERLAY */
+    #scores-overlay { position:fixed; inset:0; background:var(--bg); z-index:50; display:none; flex-direction:column; }
+    #scores-overlay.active { display:flex; }
+    .scores-row { display:flex; justify-content:space-between; align-items:center; padding:.75rem 1.25rem; border-bottom:1px solid var(--line); }
+    .scores-game { font-size:.85rem; font-weight:700; }
+    .scores-vals { display:flex; gap:1.8rem; }
+    .scores-v { display:flex; flex-direction:column; align-items:center; gap:.1rem; }
+    .scores-num { font-size:1.35rem; font-weight:900; }
+    .scores-sub { font-size:.54rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.3); }
   </style>
 </head>
 <body>
@@ -187,9 +241,14 @@
 <!-- HUB -->
 <div id="hub" class="screen active">
   <div class="hub-header">
-    <div class="hub-eyebrow">by Sovnge</div>
-    <div class="hub-title">Duo</div>
-    <div class="hub-sub">Jeux à deux · à distance ou en local</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div class="hub-eyebrow">by Sovnge</div>
+        <div class="hub-title">Duo</div>
+        <div class="hub-sub">Jeux à deux · à distance ou en local</div>
+      </div>
+      <button onclick="showScores()" style="background:var(--surf);border:1px solid var(--line);color:rgba(255,255,255,.7);font-family:inherit;font-size:.72rem;font-weight:800;border-radius:8px;padding:.45rem .75rem;cursor:pointer;margin-top:.25rem;flex-shrink:0">🏆 Scores</button>
+    </div>
   </div>
   <div class="game-grid">
     <div class="game-card" onclick="openGame('p4')">
@@ -227,6 +286,30 @@
       <div class="card-icon">📝</div>
       <div class="card-name">Petit Bac</div>
       <div class="card-badge badge-both"><span class="badge-dot"></span>Local & Distance</div>
+    </div>
+    <div class="game-card" onclick="openGame('morpion')">
+      <div class="card-glow" style="background:var(--raspberry)"></div>
+      <div class="card-icon">✕◯</div>
+      <div class="card-name">Morpion</div>
+      <div class="card-badge badge-both"><span class="badge-dot"></span>Local & Distance</div>
+    </div>
+    <div class="game-card" onclick="openGame('yams')">
+      <div class="card-glow" style="background:var(--gold)"></div>
+      <div class="card-icon">🎲</div>
+      <div class="card-name">Yam's</div>
+      <div class="card-badge badge-local"><span class="badge-dot"></span>En local</div>
+    </div>
+    <div class="game-card" onclick="openGame('echecs')">
+      <div class="card-glow" style="background:var(--sky)"></div>
+      <div class="card-icon">♟️</div>
+      <div class="card-name">Échecs</div>
+      <div class="card-badge badge-both"><span class="badge-dot"></span>Local & Distance</div>
+    </div>
+    <div class="game-card" onclick="openGame('dames')">
+      <div class="card-glow" style="background:var(--prune)"></div>
+      <div class="card-icon">⬤</div>
+      <div class="card-name">Dames</div>
+      <div class="card-badge badge-local"><span class="badge-dot"></span>En local</div>
     </div>
   </div>
 </div>
@@ -471,11 +554,12 @@
   <div id="pb-mode" class="centered-body">
     <div style="font-size:2.5rem">📝</div>
     <div class="mode-title">Petit Bac</div>
-    <div class="mode-sub">Une lettre, 6 catégories, 90 secondes. En local ou à distance.</div>
+    <div class="mode-sub">Une lettre, des catégories, 90 secondes. En local ou à distance.</div>
     <div class="btn-group">
       <button class="btn btn-ghost" onclick="pbStartLocal()">Jouer en local</button>
       <button class="btn btn-primary" onclick="pbCreateRemote()">Créer une partie à distance</button>
       <button class="btn btn-ghost" onclick="pbShowJoin()">Rejoindre une partie</button>
+      <button class="btn btn-ghost" onclick="pbShowCatsEdit()" style="font-size:.78rem;padding:.6rem 1rem;opacity:.7">Modifier les catégories ✏️</button>
     </div>
   </div>
 
@@ -543,6 +627,17 @@
     <div style="padding:.75rem 1.25rem calc(env(safe-area-inset-bottom,0px) + .75rem);display:flex;flex-direction:column;align-items:center;gap:.6rem">
       <button class="btn btn-primary btn-w" onclick="pbNewRound()">Nouvelle manche</button>
       <button class="btn btn-ghost btn-w" onclick="pbBackToHub()">Quitter</button>
+    </div>
+  </div>
+
+  <!-- Édition catégories -->
+  <div id="pb-cats-edit" style="display:none;flex:1;flex-direction:column">
+    <div style="padding:1rem 1.25rem .5rem;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35)">Catégories (une par ligne)</div>
+    <div style="flex:1;overflow-y:auto;padding:.5rem 1.25rem;display:flex;flex-direction:column;gap:.5rem" id="pb-cats-edit-list"></div>
+    <div style="padding:.75rem 1.25rem calc(env(safe-area-inset-bottom,0px) + .75rem);display:flex;flex-direction:column;align-items:center;gap:.6rem">
+      <button class="btn btn-primary btn-w" onclick="pbSaveCatsEdit()">Enregistrer</button>
+      <button class="btn btn-ghost btn-w" onclick="pbResetCats()">Remettre par défaut</button>
+      <button class="btn btn-ghost btn-w" onclick="pbShowSection('pb-mode')">Annuler</button>
     </div>
   </div>
 </div>
@@ -650,8 +745,193 @@
   </div>
 </div>
 
+<!-- MORPION -->
+<div id="game-morpion" class="game-wrap">
+  <div class="top-bar">
+    <button class="top-back" onclick="tttBackToHub()">← Retour</button>
+    <div class="top-title">Morpion</div>
+    <div class="top-right"></div>
+  </div>
+  <div id="ttt-mode" class="centered-body">
+    <div style="font-size:2.2rem">✕ ◯</div>
+    <div class="mode-title">Morpion</div>
+    <div class="btn-group">
+      <button class="btn btn-ghost" onclick="tttStartLocal()">Jouer en local</button>
+      <button class="btn btn-primary" onclick="tttCreate()">Créer une partie à distance</button>
+      <button class="btn btn-ghost" onclick="tttShowJoin()">Rejoindre une partie</button>
+    </div>
+  </div>
+  <div id="ttt-wait" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;padding:1.5rem">
+    <div class="sec-lbl">Code de la partie</div>
+    <div class="code-box" id="ttt-code-box">----</div>
+    <div class="wait-row"><div class="spinner"></div>En attente de l'adversaire…</div>
+    <button class="btn btn-ghost btn-w" onclick="tttBackToHub()">Annuler</button>
+  </div>
+  <div id="ttt-join" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:1.5rem">
+    <input id="ttt-input" class="code-input" maxlength="4" placeholder="CODE" autocomplete="off"
+      oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')"
+      onkeydown="if(event.key==='Enter')tttJoin()">
+    <div id="ttt-err" class="err-msg"></div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="tttJoin()">Rejoindre</button>
+      <button class="btn btn-ghost" onclick="tttShowSection('ttt-mode')">Retour</button>
+    </div>
+  </div>
+  <div id="ttt-game" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:1.5rem;position:relative">
+    <div class="sec-lbl" id="ttt-turn-lbl">Tour : Joueur 1</div>
+    <div class="ttt-grid" id="ttt-grid"></div>
+    <div class="win-overlay" id="ttt-win">
+      <div class="win-card">
+        <div class="win-label" id="ttt-win-lbl">Résultat</div>
+        <div class="win-msg" id="ttt-win-msg">—</div>
+      </div>
+      <div class="win-btns">
+        <button class="btn btn-primary" onclick="tttRematch()">Rejouer</button>
+        <button class="btn btn-ghost" onclick="tttBackToHub()">Quitter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- YAM'S -->
+<div id="game-yams" class="game-wrap">
+  <div class="top-bar">
+    <button class="top-back" onclick="yamsBackToHub()">← Retour</button>
+    <div class="top-title">Yam's</div>
+    <div class="top-right" id="yams-turn-lbl" style="font-size:.7rem;font-weight:800;color:rgba(255,255,255,.5)"></div>
+  </div>
+  <div id="yams-mode" class="centered-body">
+    <div style="font-size:2.5rem">🎲</div>
+    <div class="mode-title">Yam's</div>
+    <div class="mode-sub">5 dés, 13 catégories, le plus grand score gagne. En local, tour par tour.</div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="yamsStart()">Jouer en local</button>
+    </div>
+  </div>
+  <div id="yams-game" style="display:none;flex:1;flex-direction:column;gap:.8rem;overflow-y:auto;padding:.75rem">
+    <div style="display:flex;justify-content:center;gap:2.5rem;padding:.25rem 0">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.15rem">
+        <div style="font-size:1.6rem;font-weight:900;color:var(--raspberry)" id="yams-s1">0</div>
+        <div style="font-size:.56rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3)">Joueur 1</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.15rem">
+        <div style="font-size:1.6rem;font-weight:900;color:var(--gold)" id="yams-s2">0</div>
+        <div style="font-size:.56rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3)">Joueur 2</div>
+      </div>
+    </div>
+    <div class="yams-dice-row" id="yams-dice-row"></div>
+    <div style="display:flex;justify-content:center">
+      <button id="yams-roll-btn" class="btn btn-primary btn-w" onclick="yamsRollDice()">Lancer les dés</button>
+    </div>
+    <div class="yams-cats" id="yams-cats"></div>
+    <div class="win-overlay" id="yams-win" style="position:fixed">
+      <div class="win-card">
+        <div class="win-label">Fin de partie</div>
+        <div class="win-msg" id="yams-win-msg">—</div>
+        <div style="margin-top:.5rem;font-size:1.4rem;font-weight:900;color:rgba(255,255,255,.5)" id="yams-win-score"></div>
+      </div>
+      <div class="win-btns">
+        <button class="btn btn-primary" onclick="yamsRematch()">Rejouer</button>
+        <button class="btn btn-ghost" onclick="yamsBackToHub()">Quitter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ÉCHECS -->
+<div id="game-echecs" class="game-wrap">
+  <div class="top-bar">
+    <button class="top-back" onclick="chessBackToHub()">← Retour</button>
+    <div class="top-title">Échecs</div>
+    <div class="top-right"></div>
+  </div>
+  <div id="chess-mode" class="centered-body">
+    <div style="font-size:2.5rem">♟️</div>
+    <div class="mode-title">Échecs</div>
+    <div class="mode-sub">Le créateur joue les Blancs, le rejoignant les Noirs.</div>
+    <div class="btn-group">
+      <button class="btn btn-ghost" onclick="chessStartLocal()">Jouer en local</button>
+      <button class="btn btn-primary" onclick="chessCreate()">Créer une partie à distance</button>
+      <button class="btn btn-ghost" onclick="chessShowJoin()">Rejoindre (Noirs)</button>
+    </div>
+  </div>
+  <div id="chess-wait" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;padding:1.5rem">
+    <div class="sec-lbl">Code de la partie</div>
+    <div class="code-box" id="chess-code-box">----</div>
+    <div class="wait-row"><div class="spinner"></div>En attente (vous = Blancs)…</div>
+    <button class="btn btn-ghost btn-w" onclick="chessBackToHub()">Annuler</button>
+  </div>
+  <div id="chess-join" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:1.5rem">
+    <input id="chess-input" class="code-input" maxlength="4" placeholder="CODE" autocomplete="off"
+      oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')"
+      onkeydown="if(event.key==='Enter')chessJoin()">
+    <div id="chess-err" class="err-msg"></div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="chessJoin()">Rejoindre</button>
+      <button class="btn btn-ghost" onclick="chessShowSection('chess-mode')">Retour</button>
+    </div>
+  </div>
+  <div id="chess-game" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;padding:.4rem;position:relative">
+    <div class="sec-lbl" id="chess-turn-lbl">Tour : Blancs</div>
+    <div class="chess-board" id="chess-board"></div>
+    <div class="win-overlay" id="chess-win">
+      <div class="win-card">
+        <div class="win-label">Fin de partie</div>
+        <div class="win-msg" id="chess-win-msg">—</div>
+      </div>
+      <div class="win-btns">
+        <button class="btn btn-primary" onclick="chessRematch()">Rejouer</button>
+        <button class="btn btn-ghost" onclick="chessBackToHub()">Quitter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAMES -->
+<div id="game-dames" class="game-wrap">
+  <div class="top-bar">
+    <button class="top-back" onclick="drBackToHub()">← Retour</button>
+    <div class="top-title">Dames</div>
+    <div class="top-right"></div>
+  </div>
+  <div id="dr-mode" class="centered-body">
+    <div style="font-size:2.5rem">⬤</div>
+    <div class="mode-title">Dames</div>
+    <div class="mode-sub">Les captures sont obligatoires. Les pions se promeuvent en dames sur la rangée adverse.</div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="drStart()">Jouer en local</button>
+    </div>
+  </div>
+  <div id="dr-game" style="display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;padding:.4rem;position:relative">
+    <div class="sec-lbl" id="dr-turn-lbl">Tour : Joueur 1</div>
+    <div class="draughts-board" id="dr-board"></div>
+    <div style="font-size:.7rem;font-weight:700;color:rgba(255,255,255,.3);margin-top:.2rem">Appuyez sur une pièce pour voir les coups</div>
+    <div class="win-overlay" id="dr-win">
+      <div class="win-card">
+        <div class="win-label">Victoire</div>
+        <div class="win-msg" id="dr-win-msg">—</div>
+      </div>
+      <div class="win-btns">
+        <button class="btn btn-primary" onclick="drRematch()">Rejouer</button>
+        <button class="btn btn-ghost" onclick="drBackToHub()">Quitter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCORES -->
+<div id="scores-overlay">
+  <div class="top-bar">
+    <button class="top-back" onclick="hideScores()">← Retour</button>
+    <div class="top-title">Tableau des scores</div>
+    <div class="top-right"><button class="top-back" onclick="scoresReset()" style="color:var(--raspberry)">Effacer</button></div>
+  </div>
+  <div id="scores-list" style="flex:1;overflow-y:auto"></div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js"></script>
 <script>
 firebase.initializeApp({
   apiKey:"AIzaSyBsxjveQMKwY3CaDhjO2NZmmrYE2qYXP5Y",
@@ -1074,7 +1354,7 @@ window.addEventListener('load',()=>{
 
 // ─── PETIT BAC ───────────────────────────────────────────────
 // Firebase: pb/{CODE} → { status, letter, round, p1answers, p2answers, p1ready, p2ready, scores, startTs }
-const PB_CATS = ['Prénom','Animal','Pays / Ville','Aliment','Métier','Objet'];
+let PB_CATS; try{PB_CATS=JSON.parse(localStorage.getItem('duo_pb_cats'))||['Prénom','Animal','Pays / Ville','Aliment','Métier','Objet'];}catch{PB_CATS=['Prénom','Animal','Pays / Ville','Aliment','Métier','Objet'];}
 const PB_LETTERS = 'ABCDEFGHIJLMNOPRSTV';
 const PB_DURATION = 90; // seconds
 
@@ -1084,7 +1364,7 @@ let pbRound = 1, pbLetter = 'A', pbCurrentRound = 0;
 let pbLocalAnswers = [{}, {}]; // [p1, p2]
 let pbLocalPhase = 0; // 0=p1 filling, 1=p2 filling, 2=results
 
-const PB_ALL = ['pb-mode','pb-wait','pb-join','pb-pass','pb-fill','pb-results'];
+const PB_ALL = ['pb-mode','pb-wait','pb-join','pb-pass','pb-fill','pb-results','pb-cats-edit'];
 function pbShowSection(id){ PB_ALL.forEach(s=>{ document.getElementById(s).style.display = s===id ? 'flex' : 'none'; }); }
 function pbShowMode(){ pbShowSection('pb-mode'); }
 function pbShowJoin(){ document.getElementById('pb-input').value=''; document.getElementById('pb-err').textContent=''; pbShowSection('pb-join'); }
@@ -1609,6 +1889,457 @@ async function bsFireRemote(r,c,opBoard){
 
 function bsSaveSession(){try{localStorage.setItem('duo_bs_code',bsCode);localStorage.setItem('duo_bs_me',bsMe);}catch{}}
 function bsClearSession(){try{localStorage.removeItem('duo_bs_code');localStorage.removeItem('duo_bs_me');}catch{}}
+
+// ─── SCORES ──────────────────────────────────────────────────
+const SCORES_GAMES=[
+  {id:'p4',label:'Puissance 4'},{id:'bs',label:'Bataille navale'},
+  {id:'morpion',label:'Morpion'},{id:'echecs',label:'Échecs'},
+  {id:'dames',label:'Dames'},{id:'yams',label:"Yam's"},{id:'pb',label:'Petit Bac'},
+];
+function scoresGet(){try{return JSON.parse(localStorage.getItem('duo_scores'))||{};}catch{return {};}}
+function scoresAdd(game,winner){
+  const s=scoresGet();
+  if(!s[game])s[game]=[0,0];
+  if(winner===1)s[game][0]++;else if(winner===2)s[game][1]++;
+  try{localStorage.setItem('duo_scores',JSON.stringify(s));}catch{}
+  scoresRefresh();
+}
+function showScores(){scoresRefresh();document.getElementById('scores-overlay').classList.add('active');}
+function hideScores(){document.getElementById('scores-overlay').classList.remove('active');}
+function scoresRefresh(){
+  const s=scoresGet(),el=document.getElementById('scores-list');
+  el.innerHTML='';
+  SCORES_GAMES.forEach(g=>{
+    const v=s[g.id]||[0,0];
+    const row=document.createElement('div');row.className='scores-row';
+    row.innerHTML='<div class="scores-game">'+g.label+'</div><div class="scores-vals"><div class="scores-v"><div class="scores-num" style="color:var(--raspberry)">'+v[0]+'</div><div class="scores-sub">J1</div></div><div class="scores-v"><div class="scores-num" style="color:var(--gold)">'+v[1]+'</div><div class="scores-sub">J2</div></div></div>';
+    el.appendChild(row);
+  });
+}
+function scoresReset(){
+  if(!confirm('Remettre tous les scores à zéro ?'))return;
+  try{localStorage.removeItem('duo_scores');}catch{}
+  scoresRefresh();
+}
+
+// ─── MORPION ─────────────────────────────────────────────────
+let tttBoard,tttTurn,tttLocal,tttCode,tttMe,tttRef,tttListening;
+function tttInit(){tttBoard=Array(9).fill(0);tttTurn=1;tttListening=false;if(tttRef){tttRef.off();tttRef=null;}}
+function tttBackToHub(){if(tttRef){tttRef.off();tttRef=null;}tttListening=false;closeGame('morpion');tttInit();}
+function tttStartLocal(){tttLocal=true;tttInit();tttShowSection('ttt-game');tttRenderBoard();}
+async function tttCreate(){
+  tttLocal=false;tttCode=randCode();tttMe=1;tttInit();
+  await db.ref('ttt/'+tttCode).set({status:'waiting',board:'[0,0,0,0,0,0,0,0,0]',turn:1,winner:0,draw:false});
+  document.getElementById('ttt-code-box').textContent=tttCode;
+  tttShowSection('ttt-wait');
+  tttRef=db.ref('ttt/'+tttCode);tttSetupListener();
+}
+function tttShowJoin(){document.getElementById('ttt-input').value='';document.getElementById('ttt-err').textContent='';tttShowSection('ttt-join');}
+async function tttJoin(){
+  const code=document.getElementById('ttt-input').value.toUpperCase();
+  const snap=await db.ref('ttt/'+code).get();
+  if(!snap.exists()||snap.val().status!=='waiting'){document.getElementById('ttt-err').textContent='Partie introuvable';return;}
+  tttLocal=false;tttCode=code;tttMe=2;tttInit();
+  await db.ref('ttt/'+code).update({status:'playing'});
+  tttRef=db.ref('ttt/'+tttCode);tttSetupListener();
+}
+function tttSetupListener(){
+  if(tttListening||!tttRef)return;tttListening=true;
+  tttRef.on('value',snap=>{
+    if(!snap.exists())return;const d=snap.val();
+    if(d.status==='playing'||d.status==='finished'){
+      tttBoard=JSON.parse(d.board||'[0,0,0,0,0,0,0,0,0]');tttTurn=d.turn;
+      tttShowSection('ttt-game');tttRenderBoard();
+      if(d.winner||d.draw)tttShowWin(d.winner||0,!!d.draw);
+    }
+  });
+}
+function tttRenderBoard(){
+  const el=document.getElementById('ttt-grid');el.innerHTML='';
+  const sym=['','✕','◯'];
+  const lbl=document.getElementById('ttt-turn-lbl');
+  lbl.textContent=tttLocal?'Tour : Joueur '+tttTurn+(tttTurn===1?' (✕)':' (◯)'):tttTurn===tttMe?'À votre tour':'En attente…';
+  tttBoard.forEach((v,i)=>{
+    const c=document.createElement('div');
+    c.className='ttt-cell'+(v===1?' ttt-x':v===2?' ttt-o':'');
+    c.textContent=sym[v];if(!v)c.onclick=()=>tttClick(i);
+    el.appendChild(c);
+  });
+}
+function tttClick(i){
+  if(tttBoard[i])return;
+  if(!tttLocal&&tttTurn!==tttMe)return;
+  tttBoard[i]=tttTurn;
+  const w=tttCheckWin();const draw=!w&&tttBoard.every(v=>v>0);
+  if(tttLocal){
+    if(w)tttShowWin(w,false);
+    else if(draw)tttShowWin(0,true);
+    else{tttTurn=tttTurn===1?2:1;tttRenderBoard();}
+  }else{
+    tttRef.update({board:JSON.stringify(tttBoard),turn:tttTurn===1?2:1,winner:w||0,draw:!!draw,status:(w||draw)?'finished':'playing'});
+  }
+}
+function tttCheckWin(){
+  const L=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  for(const[a,b,c]of L)if(tttBoard[a]&&tttBoard[a]===tttBoard[b]&&tttBoard[a]===tttBoard[c])return tttBoard[a];
+  return 0;
+}
+function tttShowWin(winner,draw){
+  if(winner){
+    const L=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    const cells=document.getElementById('ttt-grid').children;
+    for(const[a,b,c]of L)if(tttBoard[a]===winner&&tttBoard[b]===winner&&tttBoard[c]===winner){
+      cells[a].classList.add('ttt-win');cells[b].classList.add('ttt-win');cells[c].classList.add('ttt-win');
+    }
+  }
+  const msg=document.getElementById('ttt-win-msg'),lbl=document.getElementById('ttt-win-lbl');
+  if(draw){lbl.textContent='Match nul';msg.textContent='Égalité !';}
+  else if(tttLocal){lbl.textContent='Victoire';msg.textContent='Joueur '+winner+' gagne !';scoresAdd('morpion',winner);}
+  else{lbl.textContent='Victoire';msg.textContent=winner===tttMe?'Vous gagnez !':'Adversaire gagne !';scoresAdd('morpion',winner===tttMe?tttMe:3-tttMe);}
+  document.getElementById('ttt-win').classList.add('on');
+}
+function tttRematch(){
+  document.getElementById('ttt-win').classList.remove('on');tttInit();
+  if(tttLocal){tttShowSection('ttt-game');tttRenderBoard();}
+  else if(tttMe===1)tttRef.update({board:'[0,0,0,0,0,0,0,0,0]',turn:1,winner:0,draw:false,status:'playing'});
+}
+function tttShowSection(id){
+  ['ttt-mode','ttt-wait','ttt-join','ttt-game'].forEach(s=>{const el=document.getElementById(s);if(el)el.style.display=s===id?'flex':'none';});
+}
+
+// ─── YAM'S ───────────────────────────────────────────────────
+const YAMS_CATS=[
+  {id:'ones',  label:'As',           fn:d=>d.filter(v=>v===1).reduce((a,b)=>a+b,0)},
+  {id:'twos',  label:'Deux',         fn:d=>d.filter(v=>v===2).reduce((a,b)=>a+b,0)},
+  {id:'threes',label:'Trois',        fn:d=>d.filter(v=>v===3).reduce((a,b)=>a+b,0)},
+  {id:'fours', label:'Quatre',       fn:d=>d.filter(v=>v===4).reduce((a,b)=>a+b,0)},
+  {id:'fives', label:'Cinq',         fn:d=>d.filter(v=>v===5).reduce((a,b)=>a+b,0)},
+  {id:'sixes', label:'Six',          fn:d=>d.filter(v=>v===6).reduce((a,b)=>a+b,0)},
+  {id:'toak',  label:'Brelan',       fn:d=>{const c=yc(d);return Object.values(c).some(v=>v>=3)?d.reduce((a,b)=>a+b,0):0;}},
+  {id:'foak',  label:'Carré',   fn:d=>{const c=yc(d);return Object.values(c).some(v=>v>=4)?d.reduce((a,b)=>a+b,0):0;}},
+  {id:'fh',    label:'Full',         fn:d=>{const v=Object.values(yc(d)).sort((a,b)=>a-b);return v.length===2&&v[0]===2?25:0;}},
+  {id:'ss',    label:'Petite suite', fn:d=>{const u=[...new Set(d)].sort((a,b)=>a-b);for(let i=0;i<=u.length-4;i++)if(u[i+3]-u[i]===3&&u[i+1]-u[i]===1&&u[i+2]-u[i]===2)return 30;return 0;}},
+  {id:'ls',    label:'Grande suite', fn:d=>{const u=[...new Set(d)].sort((a,b)=>a-b);return u.length===5&&u[4]-u[0]===4?40:0;}},
+  {id:'yams',  label:"Yam's",        fn:d=>Object.values(yc(d)).some(v=>v===5)?50:0},
+  {id:'chance',label:'Chance',       fn:d=>d.reduce((a,b)=>a+b,0)},
+];
+function yc(d){const c={};d.forEach(v=>c[v]=(c[v]||0)+1);return c;}
+const YAMS_FACES=['⚀','⚁','⚂','⚃','⚄','⚅'];
+let yamsDice,yamsKept,yamsRoll,yamsP1,yamsP2,yamsTurn;
+function yamsInit(){yamsDice=[1,1,1,1,1];yamsKept=[false,false,false,false,false];yamsRoll=0;yamsTurn=1;yamsP1={};yamsP2={};YAMS_CATS.forEach(c=>{yamsP1[c.id]=null;yamsP2[c.id]=null;});}
+function yamsBackToHub(){closeGame('yams');yamsInit();}
+function yamsStart(){
+  yamsInit();
+  document.getElementById('yams-mode').style.display='none';
+  document.getElementById('yams-game').style.display='flex';
+  yamsUpdateHud();yamsDiceRender();yamsCatsRender();
+}
+function yamsRollDice(){
+  if(yamsRoll>=3)return;
+  yamsDice=yamsDice.map((v,i)=>yamsKept[i]?v:Math.floor(Math.random()*6)+1);
+  yamsRoll++;yamsDiceRender();yamsCatsRender();
+  const btn=document.getElementById('yams-roll-btn');
+  if(yamsRoll>=3){btn.textContent='Plus de relances';btn.disabled=true;}
+  else btn.textContent='Relancer ('+( 3-yamsRoll)+' rest'+(3-yamsRoll>1?'ants':'ant')+')';
+}
+function yamsToggleKeep(i){if(yamsRoll===0)return;yamsKept[i]=!yamsKept[i];yamsDiceRender();}
+function yamsDiceRender(){
+  const el=document.getElementById('yams-dice-row');el.innerHTML='';
+  yamsDice.forEach((v,i)=>{
+    const d=document.createElement('div');
+    d.className='yams-die'+(yamsKept[i]?' kept':'');
+    d.textContent=YAMS_FACES[v-1];d.onclick=()=>yamsToggleKeep(i);el.appendChild(d);
+  });
+}
+function yamsCatsRender(){
+  const el=document.getElementById('yams-cats');el.innerHTML='';
+  const scores=yamsTurn===1?yamsP1:yamsP2;
+  YAMS_CATS.forEach(cat=>{
+    const taken=scores[cat.id]!==null;
+    const pot=yamsRoll>0?cat.fn(yamsDice):null;
+    const div=document.createElement('div');div.className='yams-cat'+(taken?' taken':'');
+    const valHtml=taken?'<span>'+scores[cat.id]+'</span>':(pot!==null?'<span class="yams-pot">+'+pot+'</span>':'<span>—</span>');
+    div.innerHTML='<div class="yams-cat-name">'+cat.label+'</div><div class="yams-cat-val">'+valHtml+'</div>';
+    if(!taken&&yamsRoll>0)div.onclick=()=>yamsScore(cat.id,pot);
+    el.appendChild(div);
+  });
+}
+function yamsScore(id,val){
+  const scores=yamsTurn===1?yamsP1:yamsP2;scores[id]=val;
+  yamsKept=[false,false,false,false,false];yamsRoll=0;
+  if(Object.values(yamsP1).every(v=>v!==null)&&Object.values(yamsP2).every(v=>v!==null)){yamsFinish();return;}
+  yamsTurn=yamsTurn===1?2:1;
+  const btn=document.getElementById('yams-roll-btn');btn.textContent='Lancer les dés';btn.disabled=false;
+  yamsUpdateHud();yamsDiceRender();yamsCatsRender();
+}
+function yamsTotal(s){return Object.values(s).reduce((a,b)=>a+(b||0),0);}
+function yamsUpdateHud(){
+  document.getElementById('yams-turn-lbl').textContent='J'+yamsTurn;
+  document.getElementById('yams-s1').textContent=yamsTotal(yamsP1);
+  document.getElementById('yams-s2').textContent=yamsTotal(yamsP2);
+}
+function yamsFinish(){
+  const s1=yamsTotal(yamsP1),s2=yamsTotal(yamsP2);
+  let w=0,msg;
+  if(s1>s2){msg='Joueur 1 gagne !';w=1;}else if(s2>s1){msg='Joueur 2 gagne !';w=2;}else msg='Égalité !';
+  document.getElementById('yams-win-msg').textContent=msg;
+  document.getElementById('yams-win-score').textContent=s1+' – '+s2;
+  if(w)scoresAdd('yams',w);
+  document.getElementById('yams-win').classList.add('on');
+}
+function yamsRematch(){document.getElementById('yams-win').classList.remove('on');yamsStart();}
+
+// ─── ÉCHECS ──────────────────────────────────────────────────
+const CHESS_PIECES={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
+let chessGame,chessSel,chessLocal,chessCode,chessMe,chessRef,chessListening,chessFlipped,chessLastFrom,chessLastTo;
+function chessInit(){
+  if(typeof Chess==='undefined'){alert('chess.js non chargé (connexion internet requise)');return false;}
+  chessGame=new Chess();chessSel=null;chessListening=false;chessFlipped=false;chessLastFrom='';chessLastTo='';
+  if(chessRef){chessRef.off();chessRef=null;}return true;
+}
+function chessBackToHub(){if(chessRef){chessRef.off();chessRef=null;}chessListening=false;closeGame('echecs');}
+function chessStartLocal(){if(!chessInit())return;chessLocal=true;chessShowSection('chess-game');chessRender();}
+async function chessCreate(){
+  if(!chessInit())return;chessLocal=false;chessCode=randCode();chessMe=1;
+  await db.ref('chess/'+chessCode).set({status:'waiting',fen:chessGame.fen(),lastFrom:'',lastTo:'',draw:false,winner:''});
+  document.getElementById('chess-code-box').textContent=chessCode;
+  chessShowSection('chess-wait');chessRef=db.ref('chess/'+chessCode);chessSetupListener();
+}
+function chessShowJoin(){document.getElementById('chess-input').value='';document.getElementById('chess-err').textContent='';chessShowSection('chess-join');}
+async function chessJoin(){
+  if(!chessInit())return;
+  const code=document.getElementById('chess-input').value.toUpperCase();
+  const snap=await db.ref('chess/'+code).get();
+  if(!snap.exists()||snap.val().status!=='waiting'){document.getElementById('chess-err').textContent='Partie introuvable';return;}
+  chessLocal=false;chessCode=code;chessMe=2;chessFlipped=true;
+  await db.ref('chess/'+code).update({status:'playing'});
+  chessRef=db.ref('chess/'+chessCode);chessSetupListener();
+}
+function chessSetupListener(){
+  if(chessListening||!chessRef)return;chessListening=true;
+  chessRef.on('value',snap=>{
+    if(!snap.exists())return;const d=snap.val();
+    if(d.status==='playing'||d.status==='finished'){
+      chessGame.load(d.fen);chessLastFrom=d.lastFrom||'';chessLastTo=d.lastTo||'';
+      chessShowSection('chess-game');chessRender();
+      if(d.status==='finished')chessShowWinRemote(d);
+    }
+  });
+}
+function chessRender(){
+  const el=document.getElementById('chess-board');el.innerHTML='';
+  const b=chessGame.board();
+  const sqMap={};
+  for(let ri=0;ri<8;ri++){
+    for(let ci=0;ci<8;ci++){
+      const r=chessFlipped?7-ri:ri;const c2=chessFlipped?7-ci:ci;
+      const sq='abcdefgh'[c2]+(8-r);
+      const piece=b[r][c2];
+      const isLight=(r+c2)%2===1;
+      const div=document.createElement('div');
+      div.className='chess-sq '+(isLight?'light':'dark');
+      if(sq===chessSel)div.classList.add('selected');
+      if(!chessSel&&(sq===chessLastFrom||sq===chessLastTo))div.classList.add('last-mv');
+      if(piece){const sp=document.createElement('span');sp.textContent=CHESS_PIECES[piece.color==='w'?piece.type.toUpperCase():piece.type];div.appendChild(sp);}
+      div.onclick=()=>chessClick(sq);
+      sqMap[sq]=div;el.appendChild(div);
+    }
+  }
+  if(chessSel){
+    const mvs=chessGame.moves({square:chessSel,verbose:true});
+    mvs.forEach(m=>{if(sqMap[m.to])sqMap[m.to].classList.add('movable');});
+  }
+  // Highlight king in check
+  if(chessGame.in_check()){
+    const turn=chessGame.turn();
+    for(let r=0;r<8;r++)for(let c2=0;c2<8;c2++){
+      const p=b[r][c2];
+      if(p&&p.type==='k'&&p.color===turn){const sq2='abcdefgh'[c2]+(8-r);if(sqMap[sq2])sqMap[sq2].classList.add('in-check');}
+    }
+  }
+  const turn=chessGame.turn();const lbl=document.getElementById('chess-turn-lbl');
+  if(chessLocal)lbl.textContent='Tour : '+(turn==='w'?'Blancs ♔':'Noirs ♚');
+  else{const myC=chessMe===1?'w':'b';lbl.textContent=turn===myC?'À votre tour':'En attente…';}
+}
+function chessClick(sq){
+  if(!chessLocal&&chessGame.turn()!==(chessMe===1?'w':'b'))return;
+  const b=chessGame.board();const r=8-parseInt(sq[1]);const c2='abcdefgh'.indexOf(sq[0]);
+  const piece=b[r][c2];
+  if(chessSel){
+    const mvs=chessGame.moves({square:chessSel,verbose:true});
+    const mv=mvs.find(m=>m.to===sq);
+    if(mv){
+      const promo=mv.flags.includes('p')?'q':undefined;
+      chessGame.move({from:chessSel,to:sq,promotion:promo});
+      const lf=chessSel;chessSel=null;
+      if(chessLocal){
+        chessLastFrom=lf;chessLastTo=sq;chessRender();
+        if(chessGame.in_checkmate()){chessShowWinLocal(chessGame.turn()==='w'?2:1);return;}
+        if(chessGame.in_draw()){chessShowWinLocal(0);return;}
+      }else{
+        const over=chessGame.game_over();
+        chessRef.update({fen:chessGame.fen(),lastFrom:lf,lastTo:sq,status:over?'finished':'playing',
+          winner:chessGame.in_checkmate()?(chessGame.turn()==='w'?'b':'w'):'',draw:chessGame.in_draw()?true:false});
+      }
+      return;
+    }
+    chessSel=null;
+  }
+  const isMyPiece=piece&&(chessLocal||(piece.color===(chessMe===1?'w':'b')));
+  if(isMyPiece&&chessGame.moves({square:sq}).length>0)chessSel=sq;
+  chessRender();
+}
+function chessShowWinLocal(winner){
+  const msg=document.getElementById('chess-win-msg');
+  if(winner===0)msg.textContent='Partie nulle';
+  else{msg.textContent=winner===1?'Blancs gagnent !':'Noirs gagnent !';scoresAdd('echecs',winner);}
+  document.getElementById('chess-win').classList.add('on');
+}
+function chessShowWinRemote(d){
+  const msg=document.getElementById('chess-win-msg');
+  if(d.draw)msg.textContent='Partie nulle';
+  else{
+    const iWon=(d.winner==='w'&&chessMe===1)||(d.winner==='b'&&chessMe===2);
+    msg.textContent=iWon?'Vous gagnez !':'Adversaire gagne !';
+    scoresAdd('echecs',iWon?chessMe:3-chessMe);
+  }
+  document.getElementById('chess-win').classList.add('on');
+}
+function chessRematch(){
+  document.getElementById('chess-win').classList.remove('on');
+  if(chessLocal){chessGame=new Chess();chessSel=null;chessLastFrom='';chessLastTo='';chessShowSection('chess-game');chessRender();}
+  else if(chessMe===1){chessGame=new Chess();chessRef.update({status:'playing',fen:chessGame.fen(),lastFrom:'',lastTo:'',winner:'',draw:false});}
+}
+function chessShowSection(id){
+  ['chess-mode','chess-wait','chess-join','chess-game'].forEach(s=>{const el=document.getElementById(s);if(el)el.style.display=s===id?'flex':'none';});
+}
+
+// ─── DAMES ───────────────────────────────────────────────────
+// 0=vide, 1=P1 pion, 2=P2 pion, 3=P1 dame, 4=P2 dame
+// P1 (rouge) démarre en bas (rangs 5-7), P2 (or) en haut (rangs 0-2)
+let drBoard,drTurn,drSel,drMovesCache;
+function drInit(){
+  drBoard=Array(64).fill(0);drTurn=1;drSel=-1;drMovesCache=[];
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    const i=r*8+c;if((r+c)%2===1){if(r<3)drBoard[i]=2;else if(r>4)drBoard[i]=1;}
+  }
+}
+function drBackToHub(){closeGame('dames');drInit();}
+function drStart(){drInit();document.getElementById('dr-mode').style.display='none';document.getElementById('dr-game').style.display='flex';drRender();}
+function drRender(){
+  const el=document.getElementById('dr-board');el.innerHTML='';
+  document.getElementById('dr-turn-lbl').textContent='Tour : Joueur '+drTurn+(drTurn===1?' (rouge)':' (or)');
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    const i=r*8+c;const isLight=(r+c)%2===0;
+    const div=document.createElement('div');
+    div.className='draughts-sq '+(isLight?'dsq-l':'dsq-d');
+    if(i===drSel)div.classList.add('dsq-sel');
+    if(drMovesCache.some(m=>m.to===i))div.classList.add('dsq-mv');
+    const v=drBoard[i];
+    if(v){
+      const sp=document.createElement('span');
+      sp.className=v===1||v===3?'dr-p1':'dr-p2';
+      sp.textContent=v===3||v===4?'★':'●';
+      div.appendChild(sp);
+    }
+    div.onclick=()=>drClick(i);el.appendChild(div);
+  }
+}
+function drPieceMoves(i,forCapture){
+  const v=drBoard[i];if(!v)return[];
+  const isP1=(v===1||v===3);const isKing=(v===3||v===4);
+  const dirs=[];
+  if(isP1||isKing)dirs.push([-1,-1],[-1,1]);
+  if(!isP1||isKing)dirs.push([1,-1],[1,1]);
+  const moves=[];const r=Math.floor(i/8);const c=i%8;
+  dirs.forEach(([dr,dc])=>{
+    const nr=r+dr;const nc=c+dc;
+    if(nr<0||nr>7||nc<0||nc>7)return;
+    const ni=nr*8+nc;
+    if(!drBoard[ni]&&!forCapture){moves.push({to:ni,cap:-1});}
+    else if(drBoard[ni]){
+      const ev=drBoard[ni];const isEnemy=isP1?(ev===2||ev===4):(ev===1||ev===3);
+      if(isEnemy){const jr=nr+dr;const jc=nc+dc;
+        if(jr>=0&&jr<8&&jc>=0&&jc<8){const ji=jr*8+jc;if(!drBoard[ji])moves.push({to:ji,cap:ni});}}
+    }
+  });
+  return moves;
+}
+function drAllCaps(player){
+  const res=[];
+  for(let i=0;i<64;i++){
+    const v=drBoard[i];
+    if((player===1&&(v===1||v===3))||(player===2&&(v===2||v===4)))
+      drPieceMoves(i,true).filter(m=>m.cap>=0).forEach(m=>res.push({from:i,...m}));
+  }
+  return res;
+}
+function drClick(i){
+  const v=drBoard[i];const isMine=(drTurn===1&&(v===1||v===3))||(drTurn===2&&(v===2||v===4));
+  if(drSel>=0){
+    const mv=drMovesCache.find(m=>m.to===i);
+    if(mv){
+      drBoard[mv.to]=drBoard[drSel];drBoard[drSel]=0;
+      if(mv.cap>=0)drBoard[mv.cap]=0;
+      const r=Math.floor(mv.to/8);
+      if(drBoard[mv.to]===1&&r===0)drBoard[mv.to]=3;
+      if(drBoard[mv.to]===2&&r===7)drBoard[mv.to]=4;
+      drSel=-1;drMovesCache=[];
+      const p1l=drBoard.some(v2=>v2===1||v2===3);const p2l=drBoard.some(v2=>v2===2||v2===4);
+      if(!p1l){drShowWin(2);return;}if(!p2l){drShowWin(1);return;}
+      drTurn=drTurn===1?2:1;
+      if(!drAllCaps(drTurn).length&&!drGetAllMoves(drTurn).length){drShowWin(drTurn===1?2:1);return;}
+      drRender();return;
+    }
+    drSel=-1;drMovesCache=[];
+  }
+  if(isMine){
+    const caps=drAllCaps(drTurn);
+    const hasCap=caps.length>0;
+    const myMoves=hasCap?drPieceMoves(i,true).filter(m=>m.cap>=0):drPieceMoves(i,false);
+    if(myMoves.length){drSel=i;drMovesCache=myMoves;}
+  }
+  drRender();
+}
+function drGetAllMoves(player){
+  const res=[];
+  for(let i=0;i<64;i++){
+    const v=drBoard[i];
+    if((player===1&&(v===1||v===3))||(player===2&&(v===2||v===4)))
+      drPieceMoves(i,false).forEach(m=>res.push({from:i,...m}));
+  }
+  return res;
+}
+function drShowWin(winner){
+  document.getElementById('dr-win-msg').textContent='Joueur '+winner+' gagne !';
+  scoresAdd('dames',winner);document.getElementById('dr-win').classList.add('on');
+}
+function drRematch(){document.getElementById('dr-win').classList.remove('on');drStart();}
+
+// ─── PETIT BAC — CATÉGORIES PERSO ───────────────────────────
+function pbShowCatsEdit(){
+  const el=document.getElementById('pb-cats-edit-list');el.innerHTML='';
+  PB_CATS.forEach(c=>{
+    const inp=document.createElement('input');
+    inp.style.cssText='background:var(--surf);border:1px solid var(--line);color:#fff;font-family:inherit;font-size:.95rem;font-weight:700;padding:.6rem .8rem;border-radius:var(--radius);width:100%';
+    inp.value=c;el.appendChild(inp);
+  });
+  pbShowSection('pb-cats-edit');
+}
+function pbSaveCatsEdit(){
+  const inputs=document.getElementById('pb-cats-edit-list').querySelectorAll('input');
+  const cats=[...inputs].map(i=>i.value.trim()).filter(v=>v.length>0);
+  if(cats.length<2){alert('Au moins 2 catégories');return;}
+  PB_CATS.length=0;cats.forEach(c=>PB_CATS.push(c));
+  try{localStorage.setItem('duo_pb_cats',JSON.stringify(cats));}catch{}
+  pbShowSection('pb-mode');
+}
+function pbResetCats(){
+  const def=['Prénom','Animal','Pays / Ville','Aliment','Métier','Objet'];
+  PB_CATS.length=0;def.forEach(c=>PB_CATS.push(c));
+  try{localStorage.removeItem('duo_pb_cats');}catch{}
+  pbShowSection('pb-mode');
+}
 
 // ─── UTILS ──────────────────────────────────────────────────
 function randCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ';return Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join('');}
