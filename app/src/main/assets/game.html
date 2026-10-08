@@ -1681,7 +1681,7 @@ function pbSubmit(){
 }
 
 function pbPassReady(){
-  // Player 2 is ready to fill
+  pbLocalPhase = 1;
   document.getElementById('pb-fill-who').textContent = 'Joueur 2';
   document.getElementById('pb-letter-big').textContent = pbLetter;
   pbBuildCats({});
