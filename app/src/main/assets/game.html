@@ -727,7 +727,11 @@
     </div>
     <div style="flex:1;overflow-y:auto;padding:.75rem 1rem" id="pb-compare-wrap"></div>
     <div style="padding:.75rem 1.25rem calc(env(safe-area-inset-bottom,0px) + .75rem);display:flex;flex-direction:column;align-items:center;gap:.6rem">
-      <button class="btn btn-primary btn-w" onclick="pbNewRound()">Nouvelle manche</button>
+      <div id="pb-res-pass-wrap" style="width:100%;display:none;flex-direction:column;align-items:center;gap:.5rem">
+        <div id="pb-res-pass-lbl" style="font-size:.72rem;font-weight:800;text-align:center;color:var(--txt);opacity:.45"></div>
+        <button class="btn btn-primary btn-w" onclick="pbReviewNext()">Continuer →</button>
+      </div>
+      <button class="btn btn-primary btn-w" id="pb-new-round-btn" onclick="pbNewRound()">Nouvelle manche</button>
       <button class="btn btn-ghost btn-w" onclick="pbBackToHub()">Quitter</button>
     </div>
   </div>
@@ -1607,7 +1611,10 @@ let pbLocal = false, pbCode = '', pbMe = 0, pbRef = null, pbListening = false;
 let pbTimerInterval = null, pbTimerEnd = 0;
 let pbRound = 1, pbLetter = 'A', pbCurrentRound = 0;
 let pbLocalAnswers = [{}, {}]; // [p1, p2]
-let pbLocalPhase = 0; // 0=p1 filling, 1=p2 filling, 2=results
+let pbLocalPhase = 0; // 0=p1 filling, 1=p2 filling
+let pbReviewPhase = 0; // 0=J1 contests J2, 1=J2 contests J1, 2=final
+let pbValidity = null; // validity state across review phases
+let pbLastResults = null; // {letter,a1,a2,prevScores}
 
 const PB_ALL = ['pb-mode','pb-wait','pb-join','pb-pass','pb-fill','pb-results','pb-cats-edit'];
 function pbShowSection(id){ PB_ALL.forEach(s=>{ document.getElementById(s).style.display = s===id ? 'flex' : 'none'; }); }
@@ -1690,9 +1697,15 @@ function pbPassReady(){
 }
 
 function pbShowLocalResults(){
+  pbReviewPhase=0; pbValidity=null;
   const a1=pbLocalAnswers[0], a2=pbLocalAnswers[1];
   pbRenderResults(pbLetter, a1, a2, null);
   pbShowSection('pb-results');
+}
+
+function pbReviewNext(){
+  pbReviewPhase++;
+  if(pbLastResults) pbRenderResults(pbLastResults.letter, pbLastResults.a1, pbLastResults.a2, pbLastResults.prevScores);
 }
 
 // ── REMOTE ──
@@ -1774,16 +1787,28 @@ function pbShowRemoteResults(d){
 
 // ── SHARED RESULTS RENDER ──
 function pbRenderResults(letter, a1, a2, prevScores){
+  pbLastResults={letter,a1,a2,prevScores};
   document.getElementById('pb-res-letter').textContent=letter;
   document.getElementById('pb-res-status').textContent='';
 
-  // validity[cat] = {p1: bool, p2: bool} — auto-init par lettre, modifiable manuellement
-  const validity={};
-  PB_CATS.forEach(cat=>{
-    const v1=(a1[cat]||'').trim().toUpperCase();
-    const v2=(a2[cat]||'').trim().toUpperCase();
-    validity[cat]={p1:v1.length>0&&v1[0]===letter, p2:v2.length>0&&v2[0]===letter};
-  });
+  // Init validity une seule fois par manche (conservé entre les phases de relecture)
+  if(!pbValidity){
+    pbValidity={};
+    PB_CATS.forEach(cat=>{
+      const v1=(a1[cat]||'').trim().toUpperCase();
+      const v2=(a2[cat]||'').trim().toUpperCase();
+      pbValidity[cat]={p1:v1.length>0&&v1[0]===letter, p2:v2.length>0&&v2[0]===letter};
+    });
+  }
+  const validity=pbValidity;
+
+  // Qui peut contester quoi ?
+  function canTap(pl){
+    if(!pbLocal) return (pbMe===1&&pl==='p2')||(pbMe===2&&pl==='p1');
+    if(pbReviewPhase===0) return pl==='p2'; // J1 conteste J2
+    if(pbReviewPhase===1) return pl==='p1'; // J2 conteste J1
+    return false;
+  }
 
   function getScores(){
     let s1=0,s2=0;
@@ -1811,7 +1836,7 @@ function pbRenderResults(letter, a1, a2, prevScores){
       c.style.opacity='';
       if(!ok&&v) c.classList.add('wrong');
       else if(ok){ c.classList.add('correct'); if(same) c.style.opacity='.6'; }
-      if(v) c.style.cursor='pointer';
+      if(canTap(pl)&&v) c.style.cursor='pointer'; else c.style.cursor='default';
     });
   }
 
@@ -1824,9 +1849,13 @@ function pbRenderResults(letter, a1, a2, prevScores){
   });
   wrap.appendChild(header);
 
+  // Hint selon la phase
   const hint=document.createElement('div');
   hint.style.cssText='font-size:.65rem;font-weight:700;color:var(--txt);opacity:.4;text-align:center;padding:.3rem 0 .4rem';
-  hint.textContent='Tapez sur une réponse pour la valider ou l\'invalider';
+  if(!pbLocal) hint.textContent='Tapez les réponses adverses pour les contester';
+  else if(pbReviewPhase===0) hint.textContent='Joueur 1 : tapez les réponses de J2 pour les contester';
+  else if(pbReviewPhase===1) hint.textContent='Joueur 2 : tapez les réponses de J1 pour les contester';
+  else hint.textContent='Scores finaux';
   wrap.appendChild(hint);
 
   PB_CATS.forEach(cat=>{
@@ -1838,11 +1867,24 @@ function pbRenderResults(letter, a1, a2, prevScores){
       const v=i===0?v1:v2;
       const c=document.createElement('div'); c.className='pb-cell'; c.textContent=v||'—';
       c.dataset.pbcat=cat; c.dataset.pbpl=pl;
-      if(v){ c.style.cursor='pointer'; c.onclick=()=>{ validity[cat][pl]=!validity[cat][pl]; refresh(); }; }
+      if(canTap(pl)&&v){ c.onclick=()=>{ validity[cat][pl]=!validity[cat][pl]; refresh(); }; }
       row.appendChild(c);
     });
     wrap.appendChild(row);
   });
+
+  // Boutons : pass pendant la relecture, finale sinon
+  const passWrap=document.getElementById('pb-res-pass-wrap');
+  const newRoundBtn=document.getElementById('pb-new-round-btn');
+  const passLbl=document.getElementById('pb-res-pass-lbl');
+  if(pbLocal && pbReviewPhase<2){
+    passWrap.style.display='flex';
+    newRoundBtn.style.display='none';
+    passLbl.textContent=pbReviewPhase===0?'Joueur 1 : passez à J2 quand vous avez terminé':'Joueur 2 : validez les scores quand vous avez terminé';
+  } else {
+    passWrap.style.display='none';
+    newRoundBtn.style.display='';
+  }
 
   refresh();
 }
@@ -1850,7 +1892,7 @@ function pbRenderResults(letter, a1, a2, prevScores){
 async function pbNewRound(){
   pbRound++;
   if(pbLocal){
-    pbLocalAnswers=[{},{}]; pbLocalPhase=0;
+    pbLocalAnswers=[{},{}]; pbLocalPhase=0; pbReviewPhase=0; pbValidity=null;
     pbLetter=pbRandLetter();
     pbShowFill(1);
   } else {
