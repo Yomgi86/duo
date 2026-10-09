@@ -697,7 +697,7 @@
   <div id="pb-pass" class="pb-pass-screen" style="display:none">
     <div class="pb-pass-icon">🤝</div>
     <div class="pb-pass-msg" id="pb-pass-msg">Passer le téléphone à Joueur 2</div>
-    <div class="pb-pass-sub">Joueur 2, appuyez pour commencer — Joueur 1, ne regardez pas !</div>
+    <div class="pb-pass-sub" id="pb-pass-sub">Joueur 2, appuyez pour commencer — Joueur 1, ne regardez pas !</div>
     <button class="btn btn-primary btn-w" onclick="pbPassReady()">Je suis prêt·e →</button>
   </div>
 
@@ -925,11 +925,11 @@
     <div style="display:flex;justify-content:center;gap:2.5rem;padding:.25rem 0">
       <div style="display:flex;flex-direction:column;align-items:center;gap:.15rem">
         <div style="font-size:1.6rem;font-weight:900;color:var(--raspberry)" id="yams-s1">0</div>
-        <div style="font-size:.56rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3)">Joueur 1</div>
+        <div id="yams-lbl1" style="font-size:.56rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3)">Joueur 1</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:.15rem">
         <div style="font-size:1.6rem;font-weight:900;color:var(--gold)" id="yams-s2">0</div>
-        <div style="font-size:.56rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3)">Joueur 2</div>
+        <div id="yams-lbl2" style="font-size:.56rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3)">Joueur 2</div>
       </div>
     </div>
     <div class="yams-dice-row" id="yams-dice-row"></div>
@@ -1657,6 +1657,8 @@ function pbBackToHub(){
 function pbStartLocal(){
   pbLocal=true;pbRound=1;pbLocalAnswers=[{},{}];pbLocalPhase=0;
   pbLetter=pbRandLetter();
+  document.getElementById('pb-pass-msg').textContent='Passer le téléphone à '+profileName(2);
+  document.getElementById('pb-pass-sub').textContent=profileName(2)+', appuyez pour commencer — '+profileName(1)+', ne regardez pas !';
   pbShowFill(1);
 }
 
@@ -2382,6 +2384,8 @@ function yamsStart(){
   yamsInit();
   document.getElementById('yams-mode').style.display='none';
   document.getElementById('yams-game').style.display='flex';
+  document.getElementById('yams-lbl1').textContent=profileName(1);
+  document.getElementById('yams-lbl2').textContent=profileName(2);
   yamsUpdateHud();yamsDiceRender();yamsCatsRender();
 }
 function yamsRollDice(){
@@ -2431,7 +2435,7 @@ function yamsUpdateHud(){
 function yamsFinish(){
   const s1=yamsTotal(yamsP1),s2=yamsTotal(yamsP2);
   let w=0,msg;
-  if(s1>s2){msg='Joueur 1 gagne !';w=1;}else if(s2>s1){msg='Joueur 2 gagne !';w=2;}else msg='Égalité !';
+  if(s1>s2){msg=profileName(1)+' gagne !';w=1;}else if(s2>s1){msg=profileName(2)+' gagne !';w=2;}else msg='Égalité !';
   document.getElementById('yams-win-msg').textContent=msg;
   document.getElementById('yams-win-score').textContent=s1+' – '+s2;
   if(w)scoresAdd('yams',w);
