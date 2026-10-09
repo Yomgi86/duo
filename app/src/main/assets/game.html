@@ -162,9 +162,15 @@
     .board-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: .5rem; }
     #p4-board { display: grid; grid-template-columns: repeat(7, var(--cell)); grid-template-rows: repeat(6, var(--cell)); gap: 5px; background: var(--ink-2); border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 7px; box-shadow: 0 12px 40px rgba(0,0,0,.4); }
     .cell { width: var(--cell); height: var(--cell); border-radius: 50%; background: rgba(255,255,255,.04); }
-    .cell.p1 { background: var(--p1); animation: pop .16s ease-out; box-shadow: 0 2px 10px rgba(237,37,78,.4); }
-    .cell.p2 { background: var(--p2); animation: pop .16s ease-out; box-shadow: 0 2px 10px rgba(243,222,138,.3); }
-    @keyframes pop { from { transform: scale(.4); opacity: .5; } to { transform: scale(1); } }
+    .cell.p1 { background: var(--p1); box-shadow: 0 2px 10px rgba(237,37,78,.4); }
+    .cell.p2 { background: var(--p2); box-shadow: 0 2px 10px rgba(243,222,138,.3); }
+    .cell.dropping { animation: p4drop .42s cubic-bezier(.25,.46,.45,.94) forwards; }
+    @keyframes p4drop {
+      0%   { transform: translateY(var(--p4drop-y,-200px)) scale(1.05); }
+      72%  { transform: translateY(5px) scale(1); }
+      87%  { transform: translateY(-2px); }
+      100% { transform: translateY(0); }
+    }
     .cell.win1 { background: var(--p1); animation: gr .65s ease infinite alternate; }
     .cell.win2 { background: var(--p2); animation: gy .65s ease infinite alternate; }
     @keyframes gr { to { box-shadow: 0 0 16px 5px rgba(237,37,78,.7); } }
@@ -1240,7 +1246,11 @@ function p4EnterRemote(){
         p4board=p4EmptyBoard();p4turn=1;p4status='playing';p4RenderBoard();p4UpdateTurn();
         return;
       }
-      p4ApplyState(d);p4RenderBoard();p4UpdateTurn();
+      const prev=p4board?p4board.map(r=>[...r]):null;
+      p4ApplyState(d);
+      let ar=-1,ac=-1,ch=0;
+      if(prev)for(let r=0;r<6;r++)for(let c=0;c<7;c++)if(p4board[r][c]!==prev[r][c]){ch++;ar=r;ac=c;}
+      p4RenderBoard(ch===1?ar:null,ch===1?ac:null);p4UpdateTurn();
       if(p4status==='finished')p4ShowResult(d.winner);
       else if(d.turn===p4me&&p4prevTurn!==p4me)notifyTurn('Puissance 4');
       p4prevTurn=d.turn;
@@ -1266,10 +1276,17 @@ function p4BuildBoard(){
   el.onclick=e=>{const cell=e.target.closest('.cell');if(cell)p4PlayCol(+cell.dataset.c);};
 }
 
-function p4RenderBoard(){
+function p4RenderBoard(animRow,animCol){
   document.querySelectorAll('#p4-board .cell').forEach(cell=>{
-    const v=p4board[+cell.dataset.r][+cell.dataset.c];
+    const r=+cell.dataset.r,c=+cell.dataset.c;
+    const v=p4board[r][c];
     const n='cell'+(v===1?' p1':v===2?' p2':'');if(cell.className!==n)cell.className=n;
+    if(animRow!=null&&r===animRow&&c===animCol&&v!==0){
+      const h=cell.offsetHeight+5;
+      cell.style.setProperty('--p4drop-y',(-(animRow+1)*h)+'px');
+      cell.classList.add('dropping');
+      cell.addEventListener('animationend',()=>cell.classList.remove('dropping'),{once:true});
+    }
   });
 }
 
@@ -1286,7 +1303,7 @@ async function p4PlayCol(col){
   const ns=win||draw?'finished':'playing';
   const nt=player===1?2:1;
   if(p4local){
-    p4board=next;p4turn=nt;p4status=ns;p4RenderBoard();
+    p4board=next;p4turn=nt;p4status=ns;p4RenderBoard(row,col);
     if(ns==='finished')p4ShowResult(win);else p4UpdateTurn();
   } else {
     await p4ref.update({board:JSON.stringify(next),turn:nt,status:ns,winner:win});
