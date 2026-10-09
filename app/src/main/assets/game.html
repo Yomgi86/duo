@@ -1408,16 +1408,21 @@ function qmcStartLocal(){
   document.getElementById('qmcl-scores').style.display='flex';
 }
 
+function qmcAdaptQ(q, isGuesser){
+  if(!isGuesser) return q;
+  return q.replace(/\bma\b/g,'sa').replace(/\bmon\b/g,'son').replace(/\bje\b/g,'il/elle').replace(/\bme\b/g,'se').replace(/\bm'/g,"s'");
+}
+
 function qmclUpdateUI(){
-  const sub=qmclPhase===1?'Joueur 1':'Joueur 2',gue=qmclPhase===1?'Joueur 2':'Joueur 1';
-  document.getElementById('qmcl-phase').textContent='Phase '+qmclPhase+' · Sur '+sub;
-  document.getElementById('qmcl-q').textContent=QMCQ[qmclIdx];
-  document.getElementById('qmcl-who').textContent=gue+', quelle est votre réponse ?';
-  document.getElementById('qmcl-ans').value='';document.getElementById('qmcl-ans').style.display='block';
+  const sub=qmclPhase===1?'Joueur 1':'Joueur 2', gue=qmclPhase===1?'Joueur 2':'Joueur 1';
+  document.getElementById('qmcl-phase').textContent='🎯 Questions sur '+sub;
+  document.getElementById('qmcl-q').textContent=qmcAdaptQ(QMCQ[qmclIdx], true);
+  document.getElementById('qmcl-who').textContent=gue+' — devinez la réponse de '+sub;
+  document.getElementById('qmcl-ans').value=''; document.getElementById('qmcl-ans').style.display='block';
   document.getElementById('qmcl-compare').style.display='none';
   document.getElementById('qmcl-real').value='';
-  document.getElementById('qmcl-a-who1').textContent=gue+' a répondu';
-  document.getElementById('qmcl-a-who2').textContent='Vraie réponse de '+sub+' :';
+  document.getElementById('qmcl-a-who1').textContent=gue+' a deviné :';
+  document.getElementById('qmcl-a-who2').textContent=sub+', quelle est votre vraie réponse ?';
   document.getElementById('qmcl-s1').textContent=qmclScores[0];
   document.getElementById('qmcl-s2').textContent=qmclScores[1];
   document.getElementById('qmcl-btn').textContent='Valider ma réponse';
@@ -1504,20 +1509,20 @@ function qmcrRender(d){
   document.getElementById('qmcr-s1').textContent=sc[0];
   document.getElementById('qmcr-s2').textContent=sc[1];
   const sub=d.phase===1?1:2, gue=d.phase===1?2:1;
-  const q=QMCQ[d.qIdx];
-  const phLbl='Phase '+d.phase+' · Sur Joueur '+sub;
+  const qOrig=QMCQ[d.qIdx], qAdapt=qmcAdaptQ(qOrig,true);
+  const phLbl='🎯 Questions sur Joueur '+sub;
   document.getElementById('qmcr-phase-lbl').textContent=phLbl;
-  document.getElementById('qmcr-q').textContent=q;
-  document.getElementById('qmcr-rev-lbl').textContent=phLbl+' · Q'+(d.qIdx+1);
-  document.getElementById('qmcr-rev-q').textContent=q;
+  document.getElementById('qmcr-rev-lbl').textContent='Q'+(d.qIdx+1)+' — sur Joueur '+sub;
+  document.getElementById('qmcr-rev-q').textContent=qOrig;
 
   const iSub=qmcrMe===sub, iGue=qmcrMe===gue;
   document.getElementById('qmcr-btn').style.display='none';
 
   if(d.step==='subject_answer'){
+    document.getElementById('qmcr-q').textContent=qOrig;
     if(iSub){
       qmcrShowSection('qmcr-active');
-      document.getElementById('qmcr-who').textContent='Écrivez votre réponse (l\'autre ne la verra pas encore) :';
+      document.getElementById('qmcr-who').textContent='Votre réponse (l\'autre ne la verra pas encore) :';
       document.getElementById('qmcr-ans').value='';document.getElementById('qmcr-err').textContent='';
       document.getElementById('qmcr-btn').textContent='Valider →';document.getElementById('qmcr-btn').style.display='block';
     } else {
@@ -1526,6 +1531,7 @@ function qmcrRender(d){
       document.getElementById('qmcr-wait-sub').textContent='Question '+(d.qIdx+1)+' / '+QMCQ.length;
     }
   } else if(d.step==='guesser_guess'){
+    document.getElementById('qmcr-q').textContent=qAdapt;
     if(iGue){
       qmcrShowSection('qmcr-active');
       document.getElementById('qmcr-who').textContent='Devinez la réponse de Joueur '+sub+' :';
