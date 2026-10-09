@@ -164,11 +164,12 @@
     .cell { width: var(--cell); height: var(--cell); border-radius: 50%; background: rgba(255,255,255,.04); }
     .cell.p1 { background: var(--p1); box-shadow: 0 2px 10px rgba(237,37,78,.4); }
     .cell.p2 { background: var(--p2); box-shadow: 0 2px 10px rgba(243,222,138,.3); }
-    .cell.dropping { animation: p4drop .42s cubic-bezier(.25,.46,.45,.94) forwards; }
+    .cell.dropping { animation: p4drop var(--p4dur,.35s) linear forwards; }
     @keyframes p4drop {
-      0%   { transform: translateY(var(--p4drop-y,-200px)) scale(1.05); }
-      72%  { transform: translateY(5px) scale(1); }
-      87%  { transform: translateY(-2px); }
+      0%   { transform: translateY(var(--p4drop-y,-200px)); animation-timing-function: cubic-bezier(.4,0,1,1); }
+      78%  { transform: translateY(8px); animation-timing-function: cubic-bezier(0,0,.4,1); }
+      90%  { transform: translateY(-3px); animation-timing-function: ease-in; }
+      97%  { transform: translateY(1px); animation-timing-function: ease-out; }
       100% { transform: translateY(0); }
     }
     .cell.win1 { background: var(--p1); animation: gr .65s ease infinite alternate; }
@@ -1284,6 +1285,7 @@ function p4RenderBoard(animRow,animCol){
     if(animRow!=null&&r===animRow&&c===animCol&&v!==0){
       const h=cell.offsetHeight+5;
       cell.style.setProperty('--p4drop-y',(-(animRow+1)*h)+'px');
+      cell.style.setProperty('--p4dur',Math.round(160*Math.sqrt(animRow+1))+'ms');
       cell.classList.add('dropping');
       cell.addEventListener('animationend',()=>cell.classList.remove('dropping'),{once:true});
     }
