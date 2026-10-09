@@ -1251,7 +1251,7 @@ function p4EnterRemote(){
 function p4UpdateTurn(){
   document.getElementById('p4-disc').style.background=p4turn===1?'#ED254E':'#F3DE8A';
   if(p4local){
-    document.getElementById('p4-turn-txt').textContent='Joueur '+p4turn;
+    document.getElementById('p4-turn-txt').textContent=profileName(p4turn);
     document.getElementById('p4-hint').textContent='↓ Touchez une colonne';
   } else {
     const mine=p4turn===p4me&&p4status==='playing';
@@ -1316,7 +1316,7 @@ function p4ShowResult(winner){
       }
     }
   }
-  const name=p4local?'Joueur '+winner:winner===1?'Raspberry':winner===2?'Or':null;
+  const name=p4local?profileName(winner):winner===1?'Raspberry':winner===2?'Or':null;
   document.getElementById('p4-win-lbl').textContent=winner?(name+' gagne'):'Match nul';
   document.getElementById('p4-win-msg').textContent=winner===0?'Égalité !':(p4local||winner===p4me)?'Bravo !':'Dommage…';
   document.getElementById('p4-win').classList.add('on');
@@ -1380,7 +1380,7 @@ const VOD=[
 ];
 let vodDeck=[],vodIdx=0,vodPlayer=1;
 function vodStart(){vodDeck=[...VOD].sort(()=>Math.random()-.5);vodIdx=0;vodPlayer=1;vodShow();document.getElementById('vod-home').style.display='none';document.getElementById('vod-game').style.display='flex';}
-function vodShow(){const c=vodDeck[vodIdx%VOD.length],v=c.t==='v';document.getElementById('vod-badge').textContent=v?'Vérité':'Défi';document.getElementById('vod-badge').className='vod-badge '+(v?'vod-v':'vod-d');document.getElementById('vod-text').textContent=c.q;document.getElementById('vod-counter').textContent=(vodIdx%VOD.length+1)+' / '+VOD.length;const p=vodPlayer===1;document.getElementById('vod-pdot').textContent='J'+vodPlayer;document.getElementById('vod-pdot').style.background=p?'var(--raspberry)':'var(--gold)';document.getElementById('vod-pdot').style.color=p?'#fff':'#000';document.getElementById('vod-pname').textContent='Joueur '+vodPlayer;}
+function vodShow(){const c=vodDeck[vodIdx%VOD.length],v=c.t==='v';document.getElementById('vod-badge').textContent=v?'Vérité':'Défi';document.getElementById('vod-badge').className='vod-badge '+(v?'vod-v':'vod-d');document.getElementById('vod-text').textContent=c.q;document.getElementById('vod-counter').textContent=(vodIdx%VOD.length+1)+' / '+VOD.length;const p=vodPlayer===1;document.getElementById('vod-pdot').textContent='J'+vodPlayer;document.getElementById('vod-pdot').style.background=p?'var(--raspberry)':'var(--gold)';document.getElementById('vod-pdot').style.color=p?'#fff':'#000';document.getElementById('vod-pname').textContent=profileName(vodPlayer);}
 function vodNext(){vodIdx++;vodPlayer=vodPlayer===1?2:1;vodShow();}
 function vodReset(){vodDeck=[];vodIdx=0;vodPlayer=1;}
 
@@ -1414,7 +1414,7 @@ function qmcAdaptQ(q, isGuesser){
 }
 
 function qmclUpdateUI(){
-  const sub=qmclPhase===1?'Joueur 1':'Joueur 2', gue=qmclPhase===1?'Joueur 2':'Joueur 1';
+  const sub=profileName(qmclPhase===1?1:2), gue=profileName(qmclPhase===1?2:1);
   document.getElementById('qmcl-phase').textContent='🎯 Questions sur '+sub;
   document.getElementById('qmcl-q').textContent=qmcAdaptQ(QMCQ[qmclIdx], true);
   document.getElementById('qmcl-who').textContent=gue+' — devinez la réponse de '+sub;
@@ -1450,7 +1450,7 @@ function qmclScore(ok){if(ok)qmclScores[qmclPhase-1]++;document.getElementById('
 
 function qmclEnd(){
   const [s1,s2]=qmclScores;
-  document.getElementById('qmcl-q').textContent=s1>s2?'🎉 Joueur 1 connaît mieux !':s2>s1?'🎉 Joueur 2 connaît mieux !':'Égalité parfaite !';
+  document.getElementById('qmcl-q').textContent=s1>s2?'🎉 '+profileName(1)+' connaît mieux !':s2>s1?'🎉 '+profileName(2)+' connaît mieux !':'Égalité parfaite !';
   document.getElementById('qmcl-who').textContent='J1='+s1+' pts · J2='+s2+' pts';
   document.getElementById('qmcl-ans').style.display='none';
   document.getElementById('qmcl-compare').style.display='none';
@@ -1527,7 +1527,7 @@ function qmcrRender(d){
       document.getElementById('qmcr-btn').textContent='Valider →';document.getElementById('qmcr-btn').style.display='block';
     } else {
       qmcrShowSection('qmcr-waiting');
-      document.getElementById('qmcr-wait-msg').textContent='Joueur '+sub+' écrit sa réponse…';
+      document.getElementById('qmcr-wait-msg').textContent=profileName(sub)+' écrit sa réponse…';
       document.getElementById('qmcr-wait-sub').textContent='Question '+(d.qIdx+1)+' / '+QMCQ.length;
     }
   } else if(d.step==='guesser_guess'){
@@ -1539,7 +1539,7 @@ function qmcrRender(d){
       document.getElementById('qmcr-btn').textContent='Valider →';document.getElementById('qmcr-btn').style.display='block';
     } else {
       qmcrShowSection('qmcr-waiting');
-      document.getElementById('qmcr-wait-msg').textContent='Joueur '+gue+' devine…';
+      document.getElementById('qmcr-wait-msg').textContent=profileName(gue)+' devine…';
       document.getElementById('qmcr-wait-sub').textContent='Question '+(d.qIdx+1)+' / '+QMCQ.length;
     }
   } else if(d.step==='judge'){
@@ -1585,7 +1585,7 @@ function qmcrShowEnd(d){
   document.getElementById('qmcr-s1').textContent=sc[0];document.getElementById('qmcr-s2').textContent=sc[1];
   qmcrShowSection('qmcr-reveal');
   document.getElementById('qmcr-rev-lbl').textContent='Fin de partie';
-  document.getElementById('qmcr-rev-q').textContent=sc[0]>sc[1]?'🎉 Joueur 1 gagne !':sc[1]>sc[0]?'🎉 Joueur 2 gagne !':'Égalité parfaite !';
+  document.getElementById('qmcr-rev-q').textContent=sc[0]>sc[1]?'🎉 '+profileName(1)+' gagne !':sc[1]>sc[0]?'🎉 '+profileName(2)+' gagne !':'Égalité parfaite !';
   document.getElementById('qmcr-judge-btns').style.display='none';
   document.getElementById('qmcr-judge-wait').style.display='none';
   document.getElementById('qmcr-btn').style.display='none';
@@ -1643,7 +1643,7 @@ function pbStartLocal(){
 
 function pbShowFill(player){
   pbLocalPhase = player-1;
-  document.getElementById('pb-fill-who').textContent = pbLocal ? 'Joueur '+player : 'Vous';
+  document.getElementById('pb-fill-who').textContent = pbLocal ? profileName(player) : 'Vous';
   document.getElementById('pb-letter-big').textContent = pbLetter;
   pbBuildCats({});
   pbShowSection('pb-fill');
@@ -1677,7 +1677,7 @@ function pbSubmit(){
     pbLocalAnswers[pbLocalPhase] = ans;
     if(pbLocalPhase===0){
       // pass to player 2
-      document.getElementById('pb-pass-msg').textContent = 'Passer le téléphone à Joueur 2';
+      document.getElementById('pb-pass-msg').textContent = 'Passer le téléphone à '+profileName(2);
       pbShowSection('pb-pass');
     } else {
       pbShowLocalResults();
@@ -1695,7 +1695,7 @@ function pbSubmit(){
 
 function pbPassReady(){
   pbLocalPhase = 1;
-  document.getElementById('pb-fill-who').textContent = 'Joueur 2';
+  document.getElementById('pb-fill-who').textContent = profileName(2);
   document.getElementById('pb-letter-big').textContent = pbLetter;
   pbBuildCats({});
   pbShowSection('pb-fill');
@@ -1850,7 +1850,7 @@ function pbRenderResults(letter, a1, a2, prevScores){
   const wrap=document.getElementById('pb-compare-wrap');
   wrap.innerHTML='';
   const header=document.createElement('div'); header.className='pb-compare-row';
-  ['Catégorie','Joueur 1','Joueur 2'].forEach(h=>{
+  ['Catégorie',profileName(1),profileName(2)].forEach(h=>{
     const c=document.createElement('div'); c.className='pb-cell cat'; c.textContent=h; header.appendChild(c);
   });
   wrap.appendChild(header);
@@ -1859,8 +1859,8 @@ function pbRenderResults(letter, a1, a2, prevScores){
   const hint=document.createElement('div');
   hint.style.cssText='font-size:.65rem;font-weight:700;color:var(--txt);opacity:.4;text-align:center;padding:.3rem 0 .4rem';
   if(!pbLocal) hint.textContent='Tapez les réponses adverses pour les contester';
-  else if(pbReviewPhase===0) hint.textContent='Joueur 1 : tapez les réponses de J2 pour les contester';
-  else if(pbReviewPhase===1) hint.textContent='Joueur 2 : tapez les réponses de J1 pour les contester';
+  else if(pbReviewPhase===0) hint.textContent=profileName(1)+' : tapez les réponses de '+profileName(2)+' pour les contester';
+  else if(pbReviewPhase===1) hint.textContent=profileName(2)+' : tapez les réponses de '+profileName(1)+' pour les contester';
   else hint.textContent='Scores finaux';
   wrap.appendChild(hint);
 
@@ -1886,7 +1886,7 @@ function pbRenderResults(letter, a1, a2, prevScores){
   if(pbLocal && pbReviewPhase<2){
     passWrap.style.display='flex';
     newRoundBtn.style.display='none';
-    passLbl.textContent=pbReviewPhase===0?'Joueur 1 : passez à J2 quand vous avez terminé':'Joueur 2 : validez les scores quand vous avez terminé';
+    passLbl.textContent=pbReviewPhase===0?profileName(1)+' : passez à '+profileName(2)+' quand vous avez terminé':profileName(2)+' : validez les scores quand vous avez terminé';
   } else {
     passWrap.style.display='none';
     newRoundBtn.style.display='';
@@ -1965,7 +1965,7 @@ function bsShowJoin(){document.getElementById('bs-input').value='';document.getE
 function bsBackToHub(){if(bsRef){bsRef.off();bsRef=null;}bsListening=false;bsStarted=false;bsClearSession();closeGame('bs');bsShowMode();}
 
 // ── PLACEMENT ──
-function bsStartLocal(){bsLocal=true;bsPlacePhase=0;bsInitPlace('Joueur 1');}
+function bsStartLocal(){bsLocal=true;bsPlacePhase=0;bsInitPlace(profileName(1));}
 
 function bsInitPlace(who){
   bsPlaced=[];bsSelShip=0;bsSelDir='H';
@@ -2051,10 +2051,10 @@ function bsConfirmPlace(){
     if(bsPlacePhase===0){
       bsPlacePhase=1;
       document.getElementById('bs-pass-icon').textContent='🔄';
-      document.getElementById('bs-pass-msg').textContent='Passez le téléphone à Joueur 2';
-      document.getElementById('bs-pass-sub').textContent='Joueur 2, placez vos bateaux — Joueur 1, ne regardez pas !';
+      document.getElementById('bs-pass-msg').textContent='Passez le téléphone à '+profileName(2);
+      document.getElementById('bs-pass-sub').textContent=profileName(2)+', placez vos bateaux — '+profileName(1)+', ne regardez pas !';
       document.getElementById('bs-pass-btn').textContent='Je suis prêt·e →';
-      document.getElementById('bs-pass-btn').onclick=()=>bsInitPlace('Joueur 2');
+      document.getElementById('bs-pass-btn').onclick=()=>bsInitPlace(profileName(2));
       bsSec('bs-pass');
     } else {
       bsLocalTurn=1;bsLocalS=[[],[]];bsRenderGame();bsSec('bs-game');
@@ -2073,7 +2073,7 @@ function bsRenderGame(){
   const myShots=bsLocalS[am1?0:1],opShots=bsLocalS[am1?1:0];
   const myLeft=BS_TOTAL-opShots.filter(s=>s.hit).length;
   const opLeft=BS_TOTAL-myShots.filter(s=>s.hit).length;
-  document.getElementById('bs-status').textContent='Joueur '+bsLocalTurn+' attaque';
+  document.getElementById('bs-status').textContent=profileName(bsLocalTurn)+' attaque';
   document.getElementById('bs-my-fleet').textContent='🚢 '+myLeft;
   document.getElementById('bs-op-fleet').textContent='🎯 '+opLeft;
   bsDrawAttack(opBoard,myShots,true,false);
@@ -2113,14 +2113,14 @@ function bsFireLocal(r,c){
   const next=bsLocalTurn===1?2:1;
   document.getElementById('bs-pass-icon').textContent=hit?'💥':'💦';
   document.getElementById('bs-pass-msg').textContent=(hit?'Touché ! 💥':'À l\'eau ! 💦')+' — Joueur '+next;
-  document.getElementById('bs-pass-sub').textContent='Joueur '+next+', à votre tour d\'attaquer';
+  document.getElementById('bs-pass-sub').textContent=profileName(next)+', à votre tour d\'attaquer';
   document.getElementById('bs-pass-btn').textContent='C\'est à moi →';
   document.getElementById('bs-pass-btn').onclick=()=>{bsLocalTurn=next;bsRenderGame();bsSec('bs-game');};
   bsSec('bs-pass');
 }
 
 function bsShowWin(winner){
-  document.getElementById('bs-win-msg').textContent=bsLocal?'Joueur '+winner+' gagne ! 🏆':winner===bsMe?'Vous avez gagné ! 🏆':'L\'adversaire a gagné…';
+  document.getElementById('bs-win-msg').textContent=bsLocal?profileName(winner)+' gagne ! 🏆':winner===bsMe?'Vous avez gagné ! 🏆':'L\'adversaire a gagné…';
   document.getElementById('bs-win').classList.add('on');
 }
 function bsNewGame(){document.getElementById('bs-win').classList.remove('on');bsBackToHub();}
@@ -2136,7 +2136,7 @@ async function bsCreateRemote(){
   bsRef.on('value',snap=>{
     if(!snap.exists())return;
     const d=snap.val();
-    if(d.status==='placing'&&!bsStarted){bsStarted=true;bsInitPlace('Joueur 1');}
+    if(d.status==='placing'&&!bsStarted){bsStarted=true;bsInitPlace(profileName(1));}
     else if(d.status==='placing'&&d.p1ready&&d.p2ready)bsRef.update({status:'playing'});
     else if(d.status==='playing')bsRenderRemote(d);
     else if(d.status==='finished'){bsSec('bs-game');bsShowWin(d.winner);}
@@ -2156,7 +2156,7 @@ async function bsJoinRemote(){
   bsLocal=false;bsCode=val;bsMe=2;bsSaveSession();bsStarted=true;
   bsRef=db.ref('bs/'+bsCode);
   await bsRef.update({status:'placing'});
-  bsInitPlace('Joueur 2');
+  bsInitPlace(profileName(2));
   if(!bsListening){
     bsListening=true;
     bsRef.on('value',snap=>{
@@ -2317,7 +2317,7 @@ function tttShowWin(winner,draw){
   }
   const msg=document.getElementById('ttt-win-msg'),lbl=document.getElementById('ttt-win-lbl');
   if(draw){lbl.textContent='Match nul';msg.textContent='Égalité !';}
-  else if(tttLocal){lbl.textContent='Victoire';msg.textContent='Joueur '+winner+' gagne !';scoresAdd('morpion',winner);}
+  else if(tttLocal){lbl.textContent='Victoire';msg.textContent=profileName(winner)+' gagne !';scoresAdd('morpion',winner);}
   else{lbl.textContent='Victoire';msg.textContent=winner===tttMe?'Vous gagnez !':'Adversaire gagne !';scoresAdd('morpion',winner===tttMe?tttMe:3-tttMe);}
   document.getElementById('ttt-win').classList.add('on');
 }
@@ -2664,7 +2664,7 @@ function drGetAllMoves(player){
   return res;
 }
 function drShowWin(winner){
-  document.getElementById('dr-win-msg').textContent='Joueur '+winner+' gagne !';
+  document.getElementById('dr-win-msg').textContent=profileName(winner)+' gagne !';
   scoresAdd('dames',winner);document.getElementById('dr-win').classList.add('on');
 }
 function drRematch(){document.getElementById('dr-win').classList.remove('on');drStart();}
